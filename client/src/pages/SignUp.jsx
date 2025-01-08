@@ -1,11 +1,11 @@
-import { set } from 'mongoose';
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setloading] = useState(false);
+  const navigate = useNavigate();
   const handleChange = (e) =>{
     setFormData({
       ...formData, 
@@ -34,6 +34,7 @@ export default function SignUp() {
         }
         setloading(false);
         setError(null);
+        navigate('/sign-in');
       
     } catch (error) {
       setloading(false);
