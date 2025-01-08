@@ -1,7 +1,14 @@
-import React from 'react'
+// client/src/pages/Home.jsx
+import React from 'react';
+import VideoSection from '../components/VideoSection';
 
-export default function Home() {
+
+const home = () => {
   return (
-    <div>Home</div>
-  )
-}
+    <div>
+      <VideoSection />
+    </div>
+  );
+};
+
+export default home;
