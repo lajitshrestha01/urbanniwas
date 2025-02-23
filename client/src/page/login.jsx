@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import api from '../utlis/axios.js';
+import useUserStore from '../zustand/store.jsx';
 
 const Login = () => {
   const navigate = useNavigate();
+  const loginUser = useUserStore((state) => state.loginUser); // Access store correctly
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -20,12 +22,13 @@ const Login = () => {
 
     try {
       const response = await api.post('/auth/login', formData);
-      if (response.data.message === "Login Successful") {
-        navigate('/'); // Redirect to home page after successful login
+      if (response.status === 200) {
+        loginUser(response.data.user);
+        navigate("/");
       }
     } catch (error) {
       setError(error.response?.data?.message || 'Something went wrong');
-    } finally {   
+    } finally {
       setLoading(false);
     }
   };
@@ -85,19 +88,19 @@ const Login = () => {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center"
             >
-              {showPassword ? 
-                <EyeOff className="h-5 w-5 text-gray-400" /> : 
+              {showPassword ? (
+                <EyeOff className="h-5 w-5 text-gray-400" />
+              ) : (
                 <Eye className="h-5 w-5 text-gray-400" />
-              }
+              )}
             </button>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>

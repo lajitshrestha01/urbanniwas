@@ -4,6 +4,8 @@ import Login from "./page/login";
 import Register from "./page/register";
 import { AuthProvider } from "./auth/AuthContex";
 import Home from "./page/home";
+import AgentProfile from "./page/agentProfile";
+import Myproperties from "./page/myproperties";
 
 export default function App() {
   return (
@@ -12,6 +14,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/client/profile" element={<AgentProfile />} />
+          <Route path="/agent/profile" element={<AgentProfile />} />
+          <Route path="/agent/properties" element={<Myproperties />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
