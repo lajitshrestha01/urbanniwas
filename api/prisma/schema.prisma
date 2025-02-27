@@ -35,7 +35,6 @@ model Property {
   area         Float?
   address      String
   city         String
-  province     String
   latitude     Float?
   longitude    Float?
   features     String[]

@@ -3,10 +3,10 @@ import { Heart } from 'lucide-react';
 
 const PropertyCard = ({ property }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 w-[300px]">
       <div className="relative">
         <img 
-          src={property.image || "/api/placeholder/400/300"} 
+          src={property.images || "/api/placeholder/400/300"} 
           alt={property.title} 
           className="w-full h-48 object-cover"
         />

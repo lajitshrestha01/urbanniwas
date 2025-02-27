@@ -20,7 +20,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md z-10">
+    <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Left Side: Logo & Links */}
@@ -38,7 +38,7 @@ const Navbar = () => {
           </div>
 
           {/* Right Side: Profile & Logout */}
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+          <div className="hidden sm:ml-6 sm:flex sm:items-center z-100">
             {isAuthenticated ? (
               <div className="ml-3 relative">
                 <button onClick={toggleProfileMenu} className="flex items-center text-sm focus:outline-none">

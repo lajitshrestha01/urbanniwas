@@ -1,11 +1,13 @@
 import React from 'react'
 import useUserStore from '../zustand/store'
+import Navbar from '../component/common/navbar';
 
 export default function AgentProfile() {
     const { user } = useUserStore();
     return (
         <>
-            <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+        <Navbar />
+            <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
                 <div className="flex items-center space-x-6">
                     <img
                         src={user.avatar || 'https://picsum.photos/200/300?grayscale'}
