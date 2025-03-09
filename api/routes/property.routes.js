@@ -9,4 +9,5 @@ router.get('/:id', getProperty);
 router.put('/:id', updateProperty);
 router.delete('/:id', deleteProperty);
 
+
 export default router;

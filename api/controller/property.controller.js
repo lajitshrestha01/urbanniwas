@@ -17,12 +17,18 @@ export const createProperty = async (req, res) => {
 
 // Get properties for a specific agent
 export const getProperties = async (req, res) => {
-    const { agentId } = req.query; // Get agentId from query parameters
-
     try {
-        const properties = await prisma.property.findMany({
-            where: agentId ? { agentId } : {}, // Fetch only agent-specific properties if agentId is provided
-        });
+        
+        const { agentId } = req.query; // Get agentId from query parameters
+        let properties;
+        if(agentId){
+            properties = await prisma.property.findMany({
+                where: {agentId},
+            });
+        }else{
+            properties = await prisma.property.findMany();
+        }
+        
         res.json(properties);
     } catch (error) {
         console.error('Error fetching properties:', error);

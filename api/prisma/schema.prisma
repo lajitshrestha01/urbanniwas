@@ -10,45 +10,53 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  password  String
-  name      String
-  avatar    String?
-  role      UserRole
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email       String   @unique
+  password    String
+  name        String
+  avatar      String?
+  role        UserRole
+
+  phoneNumber String?  // Optional field for phone number
+  agencyName  String?  // Optional field for agency name (for agents)
+  bio         String?  // Optional field for bio (for agents)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // One-to-many relationship with Property (An agent can have many properties)
-  properties Property[] @relation("AgentProperties")
+  properties  Property[] @relation("AgentProperties")
 }
 
 model Property {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  description  String
-  price        Float
-  type         PropertyType
-  status       PropertyStatus
-  bedrooms     Int?
-  bathrooms    Int?
-  area         Float?
-  address      String
-  city         String
-  latitude     Float?
-  longitude    Float?
-  features     String[]
-  images       String[]
-  agentId      String       @db.ObjectId
-  agent        User         @relation("AgentProperties", fields: [agentId], references: [id])  // Establish the relation
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  price       Float
+  type        PropertyType
+  status      PropertyStatus
+  bedrooms    Int?
+  bathrooms   Int?
+  area        Float?
+  address     String
+  city        String
+  latitude    Float?
+  longitude   Float?
+  features    String[]
+  images      String[]
+
+  agentId     String       @db.ObjectId
+  agent       User         @relation("AgentProperties", fields: [agentId], references: [id]) // Establishes the relation
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 enum PropertyType {
   HOUSE
   APARTMENT
   LAND
+  COMMERCIAL 
 }
 
 enum PropertyStatus {
