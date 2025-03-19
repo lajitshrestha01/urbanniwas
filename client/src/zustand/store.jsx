@@ -16,7 +16,13 @@ const useUserStore = create((set) => {
     logoutUser: () => {
       localStorage.removeItem('user');
       set({ user: null, isAuthenticated: false });
+    },
+
+    setUser: (userData) =>{
+      localStorage.setItem('user', JSON.stringify(userData));
+      set({user: userData});
     }
+
   };
 });
 
