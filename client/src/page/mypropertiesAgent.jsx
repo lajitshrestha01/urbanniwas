@@ -2,9 +2,27 @@ import React, { useState, useEffect } from 'react';
 import api from '../utlis/axios';
 import Navbar from '../component/common/navbar';
 import PropertyCard from '../component/common/propertyCard';
+import { MapContainer, TileLayer, Marker, useMapEvent } from 'react-leaflet';
+import "leaflet/dist/leaflet.css";
+
+
+const forloc = ({ setFormData }) => {
+  const [position, setPosition] = useState([0, 0])
+  useMapEvent({
+    click(e) {
+      setPosition([e.latlng.lat, e.latlng.lng]);
+      setFormData((prev) => ({
+        ...prev,
+        latitude: e.latlng.lat,
+        longitude: e.latlng.lng,
+      }));
+    }
+  })
+
+}
 
 const PropertyList = () => {
-  // ... (keeping all the state and handlers from your original code)
+
   const [properties, setProperties] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
@@ -18,10 +36,15 @@ const PropertyList = () => {
     address: '',
     city: '',
     features: [],
-    images: []
+    images: [],
+    latitude: '',
+    longitude: '',
   });
 
   const [feature, setFeature] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPropertyId, seteditingPropertyId] = useState(null);
+  const [delConfirm, setdelConfirm] = useState(null);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem('user'));
@@ -69,44 +92,44 @@ const PropertyList = () => {
     const cloudName = "dpxbzk49v";
 
     try {
-        setFormData(prev => {
-            if (prev.images.length + files.length > 6) {
-                alert("You can upload a maximum of 6 images.");
-                return prev;
-            }
-            return prev;
+      setFormData(prev => {
+        if (prev.images.length + files.length > 6) {
+          alert("You can upload a maximum of 6 images.");
+          return prev;
+        }
+        return prev;
+      });
+
+      const uploadPromises = files.slice(0, 6).map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "UrbanNiwas");
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: "POST",
+          body: formData,
         });
 
-        const uploadPromises = files.slice(0, 6).map(async (file) => {
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "UrbanNiwas");
+        const data = await response.json();
 
-            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-                method: "POST",
-                body: formData,
-            });
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${data.error?.message || 'Unknown error'}`);
+        }
+        return data.secure_url;
+      });
 
-            const data = await response.json();
+      const imageUrls = await Promise.all(uploadPromises);
 
-            if (!response.ok) {
-                throw new Error(`Upload failed: ${data.error?.message || 'Unknown error'}`);
-            }
-            return data.secure_url;
-        });
-
-        const imageUrls = await Promise.all(uploadPromises);
-
-        setFormData(prev => ({
-            ...prev,
-            images: [...prev.images, ...imageUrls].slice(0, 6) // Ensure max 6 images
-        }));
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, ...imageUrls].slice(0, 6) // Ensure max 6 images
+      }));
 
     } catch (error) {
-        console.error("Error uploading images:", error);
-        alert("Failed to upload images. Please try again.");
+      console.error("Error uploading images:", error);
+      alert("Failed to upload images. Please try again.");
     }
-};
+  };
 
 
   const handleSubmit = async (e) => {
@@ -116,16 +139,18 @@ const PropertyList = () => {
       alert('You must be logged in to post a property.');
       return;
     }
-  
+
     const propertyData = {
       ...formData,
       price: parseFloat(formData.price),
       area: parseFloat(formData.area),
       bedrooms: parseFloat(formData.bedrooms),
       bathrooms: parseFloat(formData.bathrooms),
+      latitude: parseFloat(formData.latitude),
+      longitude: parseFloat(formData.longitude),
       agentId: loggedInUser.id,
     };
-  
+
     try {
       const response = await api.post('/properties', propertyData);
       setProperties(prev => [...prev, response.data]);
@@ -141,13 +166,15 @@ const PropertyList = () => {
         address: '',
         city: '',
         features: [],
-        images: []
+        images: [],
+        latitude: '',
+        longitude: '',
       });
     } catch (error) {
       console.error('Error adding property:', error);
     }
   };
-  
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -160,7 +187,7 @@ const PropertyList = () => {
               <h2 className="text-2xl font-bold text-gray-800 mb-6">My Properties</h2>
               <div className="space-y-4 flex flex-wrap justify-around">
                 {properties.map((property) => (
-                  <PropertyCard property={property} key={property.name}/>
+                  <PropertyCard property={property} key={property.id} />
                 ))}
               </div>
             </div>
@@ -221,6 +248,28 @@ const PropertyList = () => {
                     className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   />
                 </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    name="latitude"
+                    type="float"
+                    placeholder="Latitude"
+                    value={formData.latitude}
+                    onChange={handleInputChange}
+                    className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+
+                  <input
+                    name="longitude"
+                    type="float"
+                    placeholder="Longitude"
+                    value={formData.longitude}
+                    onChange={handleInputChange}
+                    className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+
+
 
                 {formData.type !== 'LAND' && (
                   <div className="grid grid-cols-2 gap-4">
