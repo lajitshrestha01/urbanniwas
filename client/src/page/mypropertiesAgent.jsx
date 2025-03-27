@@ -5,24 +5,7 @@ import PropertyCard from '../component/common/propertyCard';
 import { MapContainer, TileLayer, Marker, useMapEvent } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 
-
-const forloc = ({ setFormData }) => {
-  const [position, setPosition] = useState([0, 0])
-  useMapEvent({
-    click(e) {
-      setPosition([e.latlng.lat, e.latlng.lng]);
-      setFormData((prev) => ({
-        ...prev,
-        latitude: e.latlng.lat,
-        longitude: e.latlng.lng,
-      }));
-    }
-  })
-
-}
-
 const PropertyList = () => {
-
   const [properties, setProperties] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
@@ -42,9 +25,6 @@ const PropertyList = () => {
   });
 
   const [feature, setFeature] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingPropertyId, seteditingPropertyId] = useState(null);
-  const [delConfirm, setdelConfirm] = useState(null);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem('user'));
@@ -61,29 +41,28 @@ const PropertyList = () => {
     }
   }, []);
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleFeatureAdd = () => {
     if (feature.trim()) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        features: [...prev.features, feature.trim()]
+        features: [...prev.features, feature.trim()],
       }));
       setFeature('');
     }
   };
 
   const handleFeatureRemove = (index) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      features: prev.features.filter((_, i) => i !== index)
+      features: prev.features.filter((_, i) => i !== index),
     }));
   };
 
@@ -92,7 +71,7 @@ const PropertyList = () => {
     const cloudName = "dpxbzk49v";
 
     try {
-      setFormData(prev => {
+      setFormData((prev) => {
         if (prev.images.length + files.length > 6) {
           alert("You can upload a maximum of 6 images.");
           return prev;
@@ -111,26 +90,20 @@ const PropertyList = () => {
         });
 
         const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(`Upload failed: ${data.error?.message || 'Unknown error'}`);
-        }
+        if (!response.ok) throw new Error(`Upload failed: ${data.error?.message || 'Unknown error'}`);
         return data.secure_url;
       });
 
       const imageUrls = await Promise.all(uploadPromises);
-
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        images: [...prev.images, ...imageUrls].slice(0, 6) // Ensure max 6 images
+        images: [...prev.images, ...imageUrls].slice(0, 6),
       }));
-
     } catch (error) {
       console.error("Error uploading images:", error);
       alert("Failed to upload images. Please try again.");
     }
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -152,8 +125,10 @@ const PropertyList = () => {
     };
 
     try {
+      console.log(propertyData);
       const response = await api.post('/properties', propertyData);
-      setProperties(prev => [...prev, response.data]);
+      console.log(response);
+      setProperties((prev) => [...prev, response.data]);
       setFormData({
         title: '',
         description: '',
@@ -175,54 +150,58 @@ const PropertyList = () => {
     }
   };
 
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="max-w-screen-2xl mx-auto p-6">
-        <div className="flex flex-col lg:flex-row gap-6">
+      <div className="max-w-screen-xl mx-auto p-6">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Properties List - Left Side */}
           <div className="lg:w-3/5">
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">My Properties</h2>
-              <div className="space-y-4 flex flex-wrap justify-around">
-                {properties.map((property) => (
-                  <PropertyCard property={property} key={property.id} />
-                ))}
-              </div>
+              {properties.length === 0 ? (
+                <p className="text-gray-500 text-center">No properties listed yet.</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {properties.map((property) => (
+                    <PropertyCard property={property} key={property.id} />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Add Property Form - Right Side */}
           <div className="lg:w-2/5">
-            <div className="bg-white rounded-xl shadow-md p-6 sticky top-6">
+            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-6 max-h-[calc(100vh-2rem)] overflow-y-auto">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Property</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                  name="title"
-                  placeholder="Property Title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <input
+                    name="title"
+                    placeholder="Property Title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  />
+                </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <select
                     name="type"
                     value={formData.type}
                     onChange={handleInputChange}
-                    className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   >
                     <option value="HOUSE">House</option>
                     <option value="APARTMENT">Apartment</option>
                     <option value="LAND">Land</option>
                   </select>
-
                   <select
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
-                    className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   >
                     <option value="FOR_SALE">For Sale</option>
                     <option value="FOR_RENT">For Rent</option>
@@ -236,40 +215,38 @@ const PropertyList = () => {
                     placeholder="Price"
                     value={formData.price}
                     onChange={handleInputChange}
-                    className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
-
                   <input
                     name="area"
                     type="number"
                     placeholder="Area (sq ft)"
                     value={formData.area}
                     onChange={handleInputChange}
-                    className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     name="latitude"
-                    type="float"
+                    type="number"
+                    step="any"
                     placeholder="Latitude"
                     value={formData.latitude}
                     onChange={handleInputChange}
-                    className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
-
                   <input
                     name="longitude"
-                    type="float"
+                    type="number"
+                    step="any"
                     placeholder="Longitude"
                     value={formData.longitude}
                     onChange={handleInputChange}
-                    className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-all transition-all"
                   />
                 </div>
-
-
 
                 {formData.type !== 'LAND' && (
                   <div className="grid grid-cols-2 gap-4">
@@ -279,16 +256,15 @@ const PropertyList = () => {
                       placeholder="Bedrooms"
                       value={formData.bedrooms}
                       onChange={handleInputChange}
-                      className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
-
                     <input
                       name="bathrooms"
                       type="number"
                       placeholder="Bathrooms"
                       value={formData.bathrooms}
                       onChange={handleInputChange}
-                      className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                 )}
@@ -299,15 +275,14 @@ const PropertyList = () => {
                     placeholder="Address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
-
                   <input
                     name="city"
                     placeholder="City"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
@@ -316,22 +291,28 @@ const PropertyList = () => {
                   placeholder="Property Description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   rows={4}
                 />
 
                 <div className="space-y-2">
                   <div className="flex gap-2">
                     <input
-                      placeholder="Add feature"
+                      placeholder="Add feature (e.g., Pool)"
                       value={feature}
                       onChange={(e) => setFeature(e.target.value)}
-                      className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleFeatureAdd();
+                        }
+                      }}
+                      className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
                     <button
                       type="button"
                       onClick={handleFeatureAdd}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                      className="px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200"
                     >
                       Add
                     </button>
@@ -346,7 +327,7 @@ const PropertyList = () => {
                         <button
                           type="button"
                           onClick={() => handleFeatureRemove(index)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-blue-600 hover:text-blue-800 transition-colors"
                         >
                           ×
                         </button>
@@ -355,11 +336,11 @@ const PropertyList = () => {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label className="block w-full">
-                    <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-colors">
+                    <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-all duration-200 bg-gray-50">
                       <i className="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                      <span className="text-gray-500">Click to upload images</span>
+                      <span className="text-gray-500 text-sm">Click to upload images (max 6)</span>
                       <input
                         type="file"
                         multiple
@@ -369,21 +350,22 @@ const PropertyList = () => {
                       />
                     </div>
                   </label>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {formData.images.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`Property ${index + 1}`}
-                        className="w-full h-20 object-cover rounded-lg"
-                      />
+                      <div key={index} className="relative">
+                        <img
+                          src={img}
+                          alt={`Property ${index + 1}`}
+                          className="w-full h-20 object-cover rounded-lg shadow-sm"
+                        />
+                      </div>
                     ))}
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                  className="w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 font-medium shadow-md"
                 >
                   Add Property
                 </button>

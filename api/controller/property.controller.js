@@ -2,11 +2,11 @@ import prisma from '../lib/prisma.js';
 
 // Create a new property
 export const createProperty = async (req, res) => {
-    const { title, description, price, city, address, images, bedrooms, bathrooms, area, type, status, agentId } = req.body;
+    const { title, description, price, city, address, images, latitude, longitude, bedrooms, bathrooms, area, type, status, agentId } = req.body;
 
     try {
         const property = await prisma.property.create({
-            data: { title, description, price, city, address, images, bedrooms, bathrooms, area, type, status, agentId },
+            data: { title, description, price, city, address, images, bedrooms, latitude, longitude,bathrooms, area, type, status, agentId },
         });
         res.status(201).json(property);
     } catch (error) {
@@ -57,12 +57,12 @@ export const getProperty = async (req, res) => {
 // Update a property
 export const updateProperty = async (req, res) => {
     const { id } = req.params;
-    const { title, description, price, city, address, images, bedrooms, bathrooms, area, type, status } = req.body;
+    const { title, description, price, city, address, images, bedrooms, latitude, longitude, bathrooms, area, type, status } = req.body;
 
     try {
         const property = await prisma.property.update({
             where: { id },
-            data: { title, description, price, city, address, images, bedrooms, bathrooms, area, type, status },
+            data: { title, description, price, city, address, images, bedrooms, latitude, longitude, bathrooms, area, type, status },
         });
         res.json(property);
     } catch (error) {

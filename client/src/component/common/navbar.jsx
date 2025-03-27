@@ -42,8 +42,8 @@ const Navbar = () => {
             {isAuthenticated ? (
               <div className="ml-3 relative">
                 <button onClick={toggleProfileMenu} className="flex items-center text-sm focus:outline-none">
-                  <img className="h-10 w-10 rounded-full" src={user.avatar || 'https://picsum.photos/200/300?grayscale'} alt={user.name} />
-                  <span className="ml-2 text-gray-700">{user.name}</span>
+                  <img className="h-10 w-10 rounded-full cursor-pointer" src={user.avatar || 'https://picsum.photos/200/300?grayscale'} alt={user.name} />
+                  <span className="ml-2 text-gray-700 cursor-pointer">{user.name}</span>
                 </button>
                 {isProfileMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white">
