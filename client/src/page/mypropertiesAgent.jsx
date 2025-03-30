@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import api from '../utlis/axios';
+import api from '../utlis/axios'; // Assuming this is your Axios instance
 import Navbar from '../component/common/navbar';
 import PropertyCard from '../component/common/propertyCard';
-import { MapContainer, TileLayer, Marker, useMapEvent } from 'react-leaflet';
-import "leaflet/dist/leaflet.css";
+import 'leaflet/dist/leaflet.css';
+import { useNavigate } from 'react-router-dom';
 
 const PropertyList = () => {
+  const navigate = useNavigate();
   const [properties, setProperties] = useState([]);
+  const [step, setStep] = useState(1); // Unused in this snippet, possibly for multi-step form?
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -23,9 +25,9 @@ const PropertyList = () => {
     latitude: '',
     longitude: '',
   });
-
   const [feature, setFeature] = useState('');
 
+  // Fetch properties on mount
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem('user'));
     if (loggedInUser) {
@@ -41,6 +43,12 @@ const PropertyList = () => {
     }
   }, []);
 
+  // Handle navigation to single property view
+  const handleCardClick = (id) => {
+    navigate(`/property/${id}`);
+  };
+
+  // Form input handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -49,6 +57,7 @@ const PropertyList = () => {
     }));
   };
 
+  // Add feature to formData.features
   const handleFeatureAdd = () => {
     if (feature.trim()) {
       setFormData((prev) => ({
@@ -59,6 +68,7 @@ const PropertyList = () => {
     }
   };
 
+  // Remove feature from formData.features
   const handleFeatureRemove = (index) => {
     setFormData((prev) => ({
       ...prev,
@@ -66,26 +76,27 @@ const PropertyList = () => {
     }));
   };
 
+  // Handle image upload to Cloudinary
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
-    const cloudName = "dpxbzk49v";
+    const cloudName = 'dpxbzk49v';
 
     try {
       setFormData((prev) => {
         if (prev.images.length + files.length > 6) {
-          alert("You can upload a maximum of 6 images.");
+          alert('You can upload a maximum of 6 images.');
           return prev;
         }
         return prev;
       });
 
-      const uploadPromises = files.slice(0, 6).map(async (file) => {
+      const uploadPromises = files.slice(0, 6 - formData.images.length).map(async (file) => {
         const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "UrbanNiwas");
+        formData.append('file', file);
+        formData.append('upload_preset', 'UrbanNiwas');
 
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-          method: "POST",
+          method: 'POST',
           body: formData,
         });
 
@@ -100,11 +111,12 @@ const PropertyList = () => {
         images: [...prev.images, ...imageUrls].slice(0, 6),
       }));
     } catch (error) {
-      console.error("Error uploading images:", error);
-      alert("Failed to upload images. Please try again.");
+      console.error('Error uploading images:', error);
+      alert('Failed to upload images. Please try again.');
     }
   };
 
+  // Submit new property
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loggedInUser = JSON.parse(localStorage.getItem('user'));
@@ -115,19 +127,17 @@ const PropertyList = () => {
 
     const propertyData = {
       ...formData,
-      price: parseFloat(formData.price),
-      area: parseFloat(formData.area),
-      bedrooms: parseFloat(formData.bedrooms),
-      bathrooms: parseFloat(formData.bathrooms),
-      latitude: parseFloat(formData.latitude),
-      longitude: parseFloat(formData.longitude),
+      price: parseFloat(formData.price) || 0,
+      area: parseFloat(formData.area) || 0,
+      bedrooms: parseFloat(formData.bedrooms) || 0,
+      bathrooms: parseFloat(formData.bathrooms) || 0,
+      latitude: parseFloat(formData.latitude) || 0,
+      longitude: parseFloat(formData.longitude) || 0,
       agentId: loggedInUser.id,
     };
 
     try {
-      console.log(propertyData);
       const response = await api.post('/properties', propertyData);
-      console.log(response);
       setProperties((prev) => [...prev, response.data]);
       setFormData({
         title: '',
@@ -164,7 +174,11 @@ const PropertyList = () => {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {properties.map((property) => (
-                    <PropertyCard property={property} key={property.id} />
+                    <PropertyCard
+                      property={property}
+                      key={property._id} // Changed to _id (MongoDB convention)
+                      onClick={() => handleCardClick(property.id)} // Fixed prop name
+                    />
                   ))}
                 </div>
               )}
@@ -196,6 +210,7 @@ const PropertyList = () => {
                     <option value="HOUSE">House</option>
                     <option value="APARTMENT">Apartment</option>
                     <option value="LAND">Land</option>
+                    <option value="COMMERCIAL">Commercial</option>
                   </select>
                   <select
                     name="status"
@@ -244,7 +259,7 @@ const PropertyList = () => {
                     placeholder="Longitude"
                     value={formData.longitude}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-all transition-all"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 

@@ -1,24 +1,23 @@
 import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useParams } from "react-router-dom"; // Import useParams
-import api from "../../utlis/axios"; // Assuming this is correct path
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
+import { useParams } from "react-router-dom";
+import api from "../../utlis/axios";
 import "leaflet/dist/leaflet.css";
 
-const Maps = ({ properties }) => {
-  const { id } = useParams(); // Get the property ID from URL params
+const Maps = () => {
+  const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [error, setError] = useState(null);
-  const [mapData, setMapData] = useState([]); // Initialize as an array, not 0
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [mapData, setMapData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProperty = async () => {
-      setLoading(true); // Start loading
+      setLoading(true);
       try {
         const response = await api.get(`/properties/${id}`);
         const fetchedProperty = response.data;
         setProperty(fetchedProperty);
-        // Assuming the API returns an object with latitude and longitude
         setMapData([
           {
             latitude: fetchedProperty.latitude,
@@ -27,19 +26,17 @@ const Maps = ({ properties }) => {
             address: fetchedProperty.address || "No address provided",
           },
         ]);
-        // console.log(response);
       } catch (error) {
         setError("Failed to load property!");
         console.error(error);
       } finally {
-        setLoading(false); // End loading
+        setLoading(false);
       }
     };
 
     fetchProperty();
   }, [id]);
 
-  // If data is loading or there's an error, show messages
   if (loading) {
     return <p>Loading map...</p>;
   }
@@ -48,21 +45,19 @@ const Maps = ({ properties }) => {
     return <p>{error}</p>;
   }
 
-  // Fallback center of the map
   const mapCenter =
     mapData.length > 0 && mapData[0].latitude && mapData[0].longitude
       ? [mapData[0].latitude, mapData[0].longitude]
-      : [51.505, -0.09]; // Default to London if no valid coordinates
+      : [51.505, -0.09];
 
   return (
-    <MapContainer center={mapCenter} zoom={15} style={{ height: "500px", width: "100%" }}>
+    <MapContainer center={mapCenter} zoom={15} style={{ height: "400px", width: "100%" }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
       {mapData.map((property, index) => {
-        // Check if latitude and longitude exist before rendering Marker
         if (property.latitude && property.longitude) {
           return (
             <Marker key={index} position={[property.latitude, property.longitude]}>
@@ -71,10 +66,15 @@ const Maps = ({ properties }) => {
                 <br />
                 {property.address}
               </Popup>
+              <Tooltip direction="top" offset={[0, -20]} opacity={0.9}>
+                <strong>{property.title}</strong>
+                <br />
+                {property.address}
+              </Tooltip>
             </Marker>
           );
         }
-        return null; // Skip if no valid coordinates
+        return null;
       })}
     </MapContainer>
   );
