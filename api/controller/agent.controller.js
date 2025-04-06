@@ -18,7 +18,7 @@ export const  getAgentDashbaord = async (req, res) =>{
         }
         
         //calculate total properties
-        const totalPropeties = agent.properties.length;
+        const totalProperties = agent.properties.length;
         
         //calcualte total value of peroperties
         const totalValue = agent.properties.reduce((sum,property) => sum + property.price, 0);
@@ -29,7 +29,7 @@ export const  getAgentDashbaord = async (req, res) =>{
         const recentProperties = agent.properties.sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)).slice(0,3);
 
         res.json({
-            totalPropeties,
+            totalProperties,
             totalValueOfProperty: totalValue, 
             pendingSales, 
             recentProperties, 

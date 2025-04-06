@@ -3,7 +3,6 @@ import useUserStore from "../zustand/store";
 import Navbar from "../component/common/navbar";
 import { Phone, Building, User, MapPin, Save, Edit, X, Upload } from "lucide-react";
 import api from "../utlis/axios";
-import { useNavigate } from "react-router-dom";
 
 export default function AgentProfile() {
   const { user, setUser } = useUserStore();

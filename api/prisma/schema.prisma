@@ -62,6 +62,8 @@ enum PropertyType {
 enum PropertyStatus {
   FOR_SALE
   FOR_RENT
+  SOLD
+  RENTED
 }
 
 enum UserRole {
