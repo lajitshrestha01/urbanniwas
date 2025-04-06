@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import postRoute from "./routes/post.route.js"
 import authRoute from "./routes/auth.route.js"
 import propertyRoutes from './routes/property.routes.js';
-import agentRoutes from './routes/agentProfile.js'
+import userRoutes from './routes/agentProfile.js'
+import agentRoutes from './routes/user.route.js'
 
 
 const app = express();
@@ -18,9 +18,9 @@ app.use(cookieParser());
 
 
 app.use("/api/auth", authRoute);
-app.use("/api/posts", postRoute);
 app.use('/api/properties',propertyRoutes);
-app.use("/api/user",agentRoutes);
+app.use("/api/user",userRoutes);
+app.use('/api/agent',agentRoutes);
 
 
 app.listen(3000, () =>{
