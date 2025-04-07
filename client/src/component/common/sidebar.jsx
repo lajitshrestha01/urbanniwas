@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, Home, Building2, PlusCircle, Mail, User, LogOut } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,9 @@ const Sidebar = () => {
       >
         {/* Sidebar header (hidden on mobile) */}
         <div className="p-4 border-b border-gray-800 hidden md:block">
-          <h1 className="text-xl font-bold">UrbanNiwas</h1>
+          <Link to="/">
+            <h1 className="text-xl font-bold cursor-pointer">UrbanNiwas</h1>
+          </Link>
         </div>
 
         {/* Navigation links */}

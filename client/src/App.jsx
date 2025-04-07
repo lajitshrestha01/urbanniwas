@@ -8,6 +8,7 @@ import AgentProfile from "./page/agentProfile";
 import Myproperties from "./page/mypropertiesAgent";
 import SingleProperty from "./component/common/singleProperty";
 import AgentDashboard from "./page/agentDashboard";
+import AddPropertyForm from "./component/dashboard/addProperty";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/client/profile" element={<AgentProfile />} />
           <Route path="/agent/profile" element={<AgentProfile />} />
           <Route path="/agent/properties" element={<Myproperties />} />
+          <Route path="/agent/add-property" element={<AddPropertyForm />} />
           <Route path="/property/:id" element={<SingleProperty />} />
           <Route path="/agent/dashboard" element={<AgentDashboard />} />
           <Route path="/login" element={<Login />} />
