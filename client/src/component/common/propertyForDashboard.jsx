@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Heart, Bed, Bath, Ruler } from 'lucide-react';
 
-const PropertyCard = ({ property, onClick }) => {
+const PropertyCardForDashboard = ({ property, onClick }) => {
   const { title, location, price, area, type, bedrooms, bathrooms, images } = property;
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem('user'));
+    const userRole = loggedInUser.role;
+    setUserRole(userRole);
+    console.log("User role is ", userRole);
+  })
 
   return (
     <div
@@ -48,9 +56,17 @@ const PropertyCard = ({ property, onClick }) => {
             <span>{area} sqft</span>
           </div>
         </div>
+        {
+          userRole === "AGENT" ? (
+            <div className='flex justify-between'>
+              <button>Edit</button>
+              <button>Delete</button>
+            </div>
+          ) : <></>
+        }
       </div>
     </div>
   );
 };
 
-export default PropertyCard;
+export default PropertyCardForDashboard;

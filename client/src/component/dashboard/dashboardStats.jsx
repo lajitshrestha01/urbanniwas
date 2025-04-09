@@ -61,11 +61,6 @@ const DashboardStats = () => {
       value: pendingSales,
       icon: <Clock className="w-8 h-8 text-yellow-500" />,
     },
-    {
-      title: 'Recent Properties',
-      value: recentProperties.length,
-      icon: <BarChart3 className="w-8 h-8 text-blue-600" />,
-    },
   ];
 
   return (
@@ -82,7 +77,7 @@ const DashboardStats = () => {
         <h2 className="text-2xl font-bold text-gray-800">Recent Properties</h2>
         <button
           className="flex items-center text-white bg-blue-600 hover:bg-indigo-700 p-3 rounded-full cursor-pointer shadow-md transition duration-300"
-          onClick={() => navigate('/add-property')} // Navigate to Add Property page
+          onClick={() => navigate('/agent/add-property')} 
         >
           <PlusCircle className="w-5 h-5 mr-2" />
           Add New Property

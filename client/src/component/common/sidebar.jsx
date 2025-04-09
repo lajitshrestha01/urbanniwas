@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Menu, Home, Building2, PlusCircle, Mail, User, LogOut } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Menu, Home, Building2, PlusCircle, Mail, User, LogOut, ChevronRight } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,60 +12,86 @@ const Sidebar = () => {
     { name: "Dashboard", icon: <Home size={20} />, path: '/agent/dashboard' },
     { name: "My Properties", icon: <Building2 size={20} />, path: '/agent/properties' },
     { name: "Add Property", icon: <PlusCircle size={20} />, path: '/agent/add-property' },
-    { name: "Messages", icon: <Mail size={20} />, path: '/message' },
+    { name: "Messages", icon: <Mail size={20} />, path: '/agent/message' },
     { name: "Profile", icon: <User size={20} />, path: '/agent/profile' },
   ];
+  
+  const location = useLocation;
 
   return (
     <>
       {/* Mobile top nav */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-white text-black border-b border-gray-800">
-        <h1 className="text-lg font-bold">UrbanNiwas</h1>
-        <button onClick={toggleSidebar}>
-          <Menu className="w-6 h-6" />
+      <div className="md:hidden flex items-center justify-between p-4 bg-slate-50 text-slate-800 border-b border-slate-200 shadow-sm">
+        <h1 className="text-lg font-bold text-slate-700">UrbanNiwas</h1>
+        <button 
+          onClick={toggleSidebar}
+          className="p-1.5 rounded-md hover:bg-slate-200 transition-colors"
+        >
+          <Menu className="w-6 h-6 text-slate-600" />
         </button>
       </div>
 
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-30 md:hidden transition-opacity duration-300"
           onClick={toggleSidebar}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed md:static top-0 left-0 h-full w-[230px] bg-white border-r border-gray-800 text-black flex flex-col z-40 transform transition-transform duration-300
+        className={`fixed md:static top-0 left-0 h-full w-[250px] bg-slate-50 border-r border-slate-200 text-slate-700 flex flex-col z-40 transform transition-all duration-300 ease-in-out shadow-lg md:shadow-none
           ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
-        {/* Sidebar header (hidden on mobile) */}
-        <div className="p-4 border-b border-gray-800 hidden md:block">
-          <Link to="/">
-            <h1 className="text-xl font-bold cursor-pointer">UrbanNiwas</h1>
+        {/* Sidebar header */}
+        <div className="p-5 border-b border-slate-200 flex items-center justify-between">
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 rounded-md bg-blue-500/10 flex items-center justify-center">
+              <Building2 size={20} className="text-blue-600" />
+            </div>
+            <h1 className="text-xl font-bold text-slate-800">UrbanNiwas</h1>
           </Link>
+          <button 
+            onClick={toggleSidebar} 
+            className="md:hidden p-1.5 rounded-md hover:bg-slate-200 transition-colors"
+          >
+            <ChevronRight size={18} className="text-slate-500" />
+          </button>
         </div>
 
         {/* Navigation links */}
-        <nav className="flex-1 pt-5">
-          <ul>
-            {menuItems.map((item, index) => (
-              <li key={index}>
-                <a
-                  href={item.path}
-                  className="flex items-center px-4 py-3 text-sm hover:bg-blue-400 transition-all"
-                >
-                  {item.icon}
-                  <span className="ml-3">{item.name}</span>
-                </a>
-              </li>
-            ))}
+        <nav className="flex-1 pt-4 overflow-y-auto">
+          <ul className="px-2 space-y-1">
+            {menuItems.map((item, index) => {
+              const isActive = location.pathname ===item.path;
+              return (
+                <li key={index}>
+                  <a
+                    href={item.path}
+                    className={`flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150 group
+                      ${isActive 
+                        ? 'bg-blue-500/10 text-blue-600' 
+                        : 'text-slate-600 hover:bg-slate-200/70'
+                      }`}
+                  >
+                    <span className={`${isActive ? 'text-blue-600' : 'text-slate-500 group-hover:text-slate-700'}`}>
+                      {item.icon}
+                    </span>
+                    <span className="ml-3">{item.name}</span>
+                    {isActive && (
+                      <span className="ml-auto w-1.5 h-5 rounded-full"></span>
+                    )}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
-        {/* Logout */}
-        <div className="p-4 border-t border-gray-800">
-          <button className="flex items-center text-gray-800 hover:text-red-600">
+        {/* User profile and logout */}
+        <div className="p-4 border-t border-slate-200 mt-auto">
+          <button className="flex w-full items-center px-3 py-2.5 text-sm text-black-600 hover:text-red-600 rounded-md transition-colors">
             <LogOut className="w-5 h-5 mr-3" />
             <span>Logout</span>
           </button>

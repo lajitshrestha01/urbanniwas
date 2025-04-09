@@ -18,7 +18,6 @@ export const createProperty = async (req, res) => {
 // Get properties for a specific agent
 export const getProperties = async (req, res) => {
     try {
-        
         const { agentId } = req.query; // Get agentId from query parameters
         let properties;
         if(agentId){
@@ -58,7 +57,7 @@ export const getProperty = async (req, res) => {
 export const updateProperty = async (req, res) => {
     const { id } = req.params;
     const { title, description, price, city, address, images, bedrooms, latitude, longitude, bathrooms, area, type, status } = req.body;
-
+    console.log("Update prop data is ", req.body);
     try {
         const property = await prisma.property.update({
             where: { id },

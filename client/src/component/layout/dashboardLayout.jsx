@@ -4,7 +4,7 @@ import Header from '../common/headerAgent'
 
 const DashboardLayout = ({ children }) => {
     return (
-        <div className='flex felx-col lg: flex-row h-screen  bg-white text-black'>
+        <div className='flex felx-col lg: flex-row h-screen  bg-slate-50 text-black'>
             <Sidebar />
             <div className="flex-1 flex flex-col overflow-hidden">
                 <Header />
