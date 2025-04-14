@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const  fillteredProperties = async (req,res) =>{
+    
     try {
         //fetching properties grouped by status
         const propertiesForSale = await prisma.property.findMany({

@@ -7,6 +7,7 @@ import userRoutes from './routes/agentProfile.js'
 import agentRoutes from './routes/user.route.js'
 
 
+
 const app = express();
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
 app.use('/api/properties',propertyRoutes);
+// app.use('/api/properties/filter', filterProperties);
 app.use("/api/user",userRoutes);
 app.use('/api/agent',agentRoutes);
 

@@ -9,6 +9,8 @@ import Myproperties from "./page/mypropertiesAgent";
 import SingleProperty from "./component/common/singleProperty";
 import AgentDashboard from "./page/agentDashboard";
 import AddPropertyForm from "./component/dashboard/addProperty";
+import Buy from "./page/buy";
+import Rent from "./page/rent"
 
 export default function App() {
   return (
@@ -23,6 +25,8 @@ export default function App() {
           <Route path="/agent/add-property" element={<AddPropertyForm />} />
           <Route path="/property/:id" element={<SingleProperty />} />
           <Route path="/agent/dashboard" element={<AgentDashboard />} />
+          <Route path="/buy" element={<Buy />} />
+          <Route path="/rent" element={<Rent />} />
           <Route path="/login" element={<Login />} />
           
         </Routes>
