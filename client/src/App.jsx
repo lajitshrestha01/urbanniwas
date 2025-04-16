@@ -11,6 +11,10 @@ import AgentDashboard from "./page/agentDashboard";
 import AddPropertyForm from "./component/dashboard/addProperty";
 import Buy from "./page/buy";
 import Rent from "./page/rent"
+import KathmanduProperties from "./page/cities/kathmanduProperty";
+import BhaktapurProperties from "./page/cities/bhaktapurProperty";
+import LalitpurProperties from "./page/cities/lalitpurProperty";
+import FavoritesPage from "./page/favorites";
 
 export default function App() {
   return (
@@ -25,6 +29,10 @@ export default function App() {
           <Route path="/agent/add-property" element={<AddPropertyForm />} />
           <Route path="/property/:id" element={<SingleProperty />} />
           <Route path="/agent/dashboard" element={<AgentDashboard />} />
+          <Route path="/properties/city/kathmandu" element={<KathmanduProperties />} />
+          <Route path="/properties/city/bhaktapur" element={<BhaktapurProperties />} />
+          <Route path="/properties/city/lalitpur" element={<LalitpurProperties />} />
+          <Route path="/client/favorites" element={<FavoritesPage />} />
           <Route path="/buy" element={<Buy />} />
           <Route path="/rent" element={<Rent />} />
           <Route path="/login" element={<Login />} />

@@ -1,13 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import { Heart, Bed, Bath, Ruler } from 'lucide-react';
-
+import useUserStore from "../../zustand/store";
+import { useEffect, useState } from "react";
+import { Heart, Bed, Bath, Ruler } from "lucide-react";
+import api from '../../utlis/axios'
 const PropertyCard = ({ property, onClick }) => {
-  const { title, location, price, area, type, bedrooms, bathrooms, images } = property;
+  const { title, location, price, area, type, bedrooms, bathrooms, images, id } = property;
+  const { user, isAuthenticated } = useUserStore();
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  useEffect(() => {
+    const checkFavorite = async () => {
+      if (isAuthenticated && user) {
+        try {
+          const { data } = await api.get('/favorites', {
+            withCredentials: true, // Send JWT cookie
+          });
+          setIsFavorited(data.some((fav) => fav.propertyId === id));
+        } catch (error) {
+          console.error('Check favorite error:', error);
+        }
+      }
+    };
+    checkFavorite();
+  }, [user, isAuthenticated, id]);
+
+  const toggleFavorite = async (e) => {
+    e.stopPropagation(); // Prevent card click
+    if (!isAuthenticated || !user) return alert('Please log in');
+    if (user.role !== 'CLIENT') return alert('Only clients can favorite');
+
+    try {
+      if (isFavorited) {
+        await api.delete(`/favorites/remove/${id}`, {
+          withCredentials: true,
+        });
+        setIsFavorited(false);
+      } else {
+        await api.post(
+          '/favorites/add',
+          { propertyId: id },
+          { withCredentials: true }
+        );
+        setIsFavorited(true);
+      }
+    } catch (error) {
+      console.error('Favorite error:', error.response?.data?.message);
+      alert(error.response?.data?.message || 'Failed to update favorite');
+    }
+  };
 
   return (
     <div
       className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 w-[300px] cursor-pointer"
-      onClick={onClick} // Attach the onClick handler here
+      onClick={onClick}
     >
       <div className="relative">
         <img
@@ -18,9 +62,13 @@ const PropertyCard = ({ property, onClick }) => {
         <div className="absolute top-2 right-2">
           <button
             className="p-2 bg-white rounded-full hover:bg-gray-100"
-            onClick={(e) => e.stopPropagation()} // Prevent button click from triggering card navigation
+            onClick={toggleFavorite}
           >
-            <Heart className="w-5 h-5 text-gray-600" />
+            <Heart
+              className="w-5 h-5"
+              fill={isFavorited ? 'red' : 'none'}
+              color={isFavorited ? 'red' : 'gray'}
+            />
           </button>
         </div>
         <div className="absolute bottom-2 left-2">

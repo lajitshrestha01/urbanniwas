@@ -3,9 +3,11 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.route.js"
 import propertyRoutes from './routes/property.routes.js';
-import userRoutes from './routes/agentProfile.js'
-import agentRoutes from './routes/user.route.js'
-
+import userRoutes from './routes/agentProfile.js';
+import agentRoutes from './routes/user.route.js';
+import cityRoutes from './routes/city.routes.js';
+import favoriteRoutes from './routes/favorites.routes.js';
+import filterRoutes from './routes/filterPropery.routes.js'
 
 
 const app = express();
@@ -20,9 +22,11 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
 app.use('/api/properties',propertyRoutes);
-// app.use('/api/properties/filter', filterProperties);
+app.use('/api/filter', filterRoutes);
 app.use("/api/user",userRoutes);
 app.use('/api/agent',agentRoutes);
+app.use('/api/properties/city', cityRoutes);
+app.use('/api/favorites', favoriteRoutes);
 
 
 app.listen(3000, () =>{

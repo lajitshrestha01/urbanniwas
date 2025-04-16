@@ -20,7 +20,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {cities.map((city) => (
                 <li key={city}>
-                  <a href={`/properties/${city.toLowerCase()}`} className="text-gray-400 hover:text-white">
+                  <a href={`/properties/city/${city.toLowerCase()}`} className="text-gray-400 hover:text-white">
                     {city}
                   </a>
                 </li>
