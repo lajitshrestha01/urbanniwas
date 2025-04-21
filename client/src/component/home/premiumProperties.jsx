@@ -19,7 +19,7 @@ const PremiumProperties = () => {
   })
   return (
     <PropertySection 
-      title="Exclusive Properties"
+      title="Premium Properties"
       properties={premiumProperties}
       viewAllLink="/properties/exclusive"
     />

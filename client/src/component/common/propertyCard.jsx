@@ -61,7 +61,7 @@ const PropertyCard = ({ property, onClick }) => {
         />
         <div className="absolute top-2 right-2">
           <button
-            className="p-2 bg-white rounded-full hover:bg-gray-100"
+            className="p-2 bg-white rounded-full cursor-pointer hover:bg-gray-100"
             onClick={toggleFavorite}
           >
             <Heart

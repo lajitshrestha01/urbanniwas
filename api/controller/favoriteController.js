@@ -53,6 +53,7 @@ export const getFavorites = async (req, res) => {
             price: true,
             city: true,
             images: true,
+            type: true,
           },
         },
       },

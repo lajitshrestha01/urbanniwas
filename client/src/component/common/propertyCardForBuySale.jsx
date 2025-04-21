@@ -4,7 +4,7 @@ import { Heart, Maximize2, Bed, Bath } from "lucide-react"
 const PropertyCardBuySale = ({ property, onClick }) => {
   const { 
     title, 
-    location, 
+    city, 
     price, 
     area, 
     type, 
@@ -70,7 +70,7 @@ const PropertyCardBuySale = ({ property, onClick }) => {
           </div>
 
           {/* Title and Location */}
-          <p className="text-gray-600 text-sm mt-1">{location}</p>
+          <p className="text-gray-600 text-sm mt-1">{city}</p>
 
           {/* Features */}
           <div className="flex flex-wrap gap-6 mt-4">

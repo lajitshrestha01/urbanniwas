@@ -1,35 +1,38 @@
-// buyandsale.controller.js (updated)
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export const buyAndSale = async (req, res, forcedStatus = null) => {
   try {
-    const {location, minPrice, maxPrice, propertyType, page = 1} = req.query;
-    const limit = 7; // 7 properties per page
+    const { location, minPrice, maxPrice, propertyType, page = 1 } = req.query;
+    const limit = 7;
     const skip = (page - 1) * limit;
 
     let whereClause = {
       ...(forcedStatus && { status: forcedStatus }),
+
+      ...(location?.trim() && {
+        city: {
+          contains: location.trim(),
+          mode: 'insensitive',
+        },
+      }),
+
+      ...(propertyType?.trim() && {
+        type: propertyType.trim(),
+      }),
     };
-    
-    // Handle location (case-insensitive regex)
-    if (location && location.trim()) {
-      whereClause.city = { $regex: new RegExp(location, "i") };
-    }
-    
-    // Handle price range (both minPrice and maxPrice)
-    if (minPrice && !isNaN(parseFloat(minPrice))) {
-      whereClause.price = { ...whereClause.price, $gte: Number(minPrice) };
-    }
-    
-    if (maxPrice && !isNaN(parseFloat(maxPrice))) {
-      whereClause.price = { ...whereClause.price, $lte: Number(maxPrice) };
-    }
-    
-    // Handle property type
-    if (propertyType && propertyType.trim()) {
-      whereClause.type = propertyType;
+
+    // Price filtering logic
+    if (!isNaN(parseFloat(minPrice)) || !isNaN(parseFloat(maxPrice))) {
+      whereClause.price = {
+        ...(minPrice && !isNaN(parseFloat(minPrice)) && {
+          gte: Number(minPrice),
+        }),
+        ...(maxPrice && !isNaN(parseFloat(maxPrice)) && {
+          lte: Number(maxPrice),
+        }),
+      };
     }
 
     const properties = await prisma.property.findMany({
@@ -44,7 +47,7 @@ export const buyAndSale = async (req, res, forcedStatus = null) => {
 
     res.status(200).json({ properties, hasMore });
   } catch (error) {
-    console.log("Error fetching properties:", error);
+    console.error("Error fetching properties:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
