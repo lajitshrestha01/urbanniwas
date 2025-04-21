@@ -1,6 +1,7 @@
 import useUserStore from "../../zustand/store";
 import { useEffect, useState } from "react";
 import { Heart, Bed, Bath, Ruler } from "lucide-react";
+import { Link } from "react-router-dom"; 
 import api from '../../utlis/axios'
 const PropertyCard = ({ property, onClick }) => {
   const { title, location, price, area, type, bedrooms, bathrooms, images, id } = property;
@@ -49,6 +50,8 @@ const PropertyCard = ({ property, onClick }) => {
   };
 
   return (
+    <>
+    <Link to={`/property/${property.id}`}>
     <div
       className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 w-[300px] cursor-pointer"
       onClick={onClick}
@@ -98,6 +101,10 @@ const PropertyCard = ({ property, onClick }) => {
         </div>
       </div>
     </div>
+    </Link>
+   
+    </>
+   
   );
 };
 

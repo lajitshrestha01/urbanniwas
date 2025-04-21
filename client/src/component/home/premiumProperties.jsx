@@ -21,7 +21,7 @@ const PremiumProperties = () => {
     <PropertySection 
       title="Premium Properties"
       properties={premiumProperties}
-      viewAllLink="/properties/exclusive"
+      viewAllLink="/properties/premium"
     />
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Heart, Maximize2, Bed, Bath } from "lucide-react"
+import { Link } from "react-router-dom"; 
 
 const PropertyCardBuySale = ({ property, onClick }) => {
   const { 
@@ -34,6 +35,8 @@ const PropertyCardBuySale = ({ property, onClick }) => {
   const listedDays = calculateListedDays();
 
   return (
+    <>
+    <Link to={`/property/${property.id}`}>
     <div
       onClick={onClick}
       className="bg-white rounded-lg shadow-md overflow-hidden w-full mb-4 cursor-pointer hover:shadow-lg transition-shadow duration-300"
@@ -106,6 +109,10 @@ const PropertyCardBuySale = ({ property, onClick }) => {
         </div>
       </div>
     </div>
+    </Link>
+    
+    </>
+    
   );
 };
 
