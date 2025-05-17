@@ -7,7 +7,8 @@ import userRoutes from './routes/agentProfile.js';
 import agentRoutes from './routes/user.route.js';
 import cityRoutes from './routes/city.routes.js';
 import favoriteRoutes from './routes/favorites.routes.js';
-import filterRoutes from './routes/filterPropery.routes.js'
+import filterRoutes from './routes/filterPropery.routes.js';
+import bookingRoutes from './routes/booking.routes.js'
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/user",userRoutes);
 app.use('/api/agent',agentRoutes);
 app.use('/api/properties/city', cityRoutes);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 
 app.listen(3000, () =>{

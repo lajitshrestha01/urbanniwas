@@ -15,6 +15,8 @@ import KathmanduProperties from "./page/cities/kathmanduProperty";
 import BhaktapurProperties from "./page/cities/bhaktapurProperty";
 import LalitpurProperties from "./page/cities/lalitpurProperty";
 import FavoritesPage from "./page/favorites";
+import EditProperty from "./page/Edit";
+import BookingRequest from "./component/dashboard/booking";
 
 export default function App() {
   return (
@@ -27,12 +29,14 @@ export default function App() {
           <Route path="/agent/profile" element={<AgentProfile />} />
           <Route path="/agent/properties" element={<Myproperties />} />
           <Route path="/agent/add-property" element={<AddPropertyForm />} />
+          <Route path="/agent/booking-request" element={<BookingRequest />} />
           <Route path="/property/:id" element={<SingleProperty />} />
           <Route path="/agent/dashboard" element={<AgentDashboard />} />
           <Route path="/properties/city/kathmandu" element={<KathmanduProperties />} />
           <Route path="/properties/city/bhaktapur" element={<BhaktapurProperties />} />
           <Route path="/properties/city/lalitpur" element={<LalitpurProperties />} />
           <Route path="/client/favorites" element={<FavoritesPage />} />
+          <Route path="/property/edit/:id" element={<EditProperty />} />
           <Route path="/buy" element={<Buy />} />
           <Route path="/rent" element={<Rent />} />
           <Route path="/login" element={<Login />} />

@@ -41,7 +41,11 @@ export const getProperty = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const property = await prisma.property.findUnique({ where: { id } });
+        const property = await prisma.property.findUnique({ 
+            where: { id },
+            include:{ agent: {select: {id: true, name: true, phoneNumber: true, agencyName: true}}},
+         });
+
 
         if (!property) {
             return res.status(404).json({ message: 'Property not found' });

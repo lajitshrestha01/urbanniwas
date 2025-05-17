@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Home, Building2, PlusCircle, Mail, User, LogOut, ChevronRight } from 'lucide-react';
+import { Menu, Home, Building2, PlusCircle, Mail, User, LogOut, ChevronRight, CalendarPlus } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -13,6 +13,7 @@ const Sidebar = () => {
     { name: "My Properties", icon: <Building2 size={20} />, path: '/agent/properties' },
     { name: "Add Property", icon: <PlusCircle size={20} />, path: '/agent/add-property' },
     { name: "Messages", icon: <Mail size={20} />, path: '/agent/message' },
+    { name: "Booking Request", icon: <CalendarPlus size={20} />, path: '/agent/booking-request' },
     { name: "Profile", icon: <User size={20} />, path: '/agent/profile' },
   ];
   
