@@ -56,8 +56,7 @@ const Navbar = () => {
                     {role === "CLIENT" && (
                       <>
                         <Link to="/client/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</Link>
-                        <Link to="/client/favorites" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Favorites</Link>
-                        <Link to="/client/messages" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Messages</Link>
+                        <Link to="/client/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashbaord</Link>
                       </>
                     )}
                     <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</button>

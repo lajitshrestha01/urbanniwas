@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import api from "../utlis/axios"
 import PropertyCard from "../component/common/propertyCard"
 import Navbar from '../component/common/navbar'
+import DashboardLayout from "../component/layout/dashboardLayout"
 
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([])
@@ -29,9 +30,8 @@ const FavoritesPage = () => {
   return (
     <>
     <div className="sticky top-0 z-10 bg-white shadow">
-      <Navbar />
-    </div>
-     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <DashboardLayout>
+             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="border-b border-gray-200 pb-5 mb-8">
         <h2 className="text-3xl font-bold text-gray-900 tracking-tight">My Favorites</h2>
         <p className="mt-2 text-sm text-gray-500">
@@ -91,6 +91,9 @@ const FavoritesPage = () => {
         </div>
       )}
     </div>
+      </DashboardLayout>
+    </div>
+
     </>
    
   )

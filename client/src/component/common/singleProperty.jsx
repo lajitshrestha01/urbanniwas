@@ -9,6 +9,7 @@ import Navbar from "./navbar"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import useUserStore from "../../zustand/store"
+import {toast, ToastContainer} from 'react-toastify'
 
 const SingleProperty = () => {
   const { id } = useParams()
@@ -39,34 +40,35 @@ const SingleProperty = () => {
 
   const handleBooking = async (e) => {
     e.preventDefault()
-    if (!isAuthenticated) return alert("Please log in")
+    if (!isAuthenticated) return toast.error("Please log in")
     try {
       await api.post(
         "/bookings",
         { propertyId: property.id, date: selectedDate, timeSlot },
         { headers: { Authorization: `Bearer ${user.token}` } },
       )
-      alert("Booking request sent!")
+      toast.success("Booking request sent!")
       setIsBookingModalOpen(false)
     } catch (error) {
-      alert(error.response?.data?.error || "Error creating booking")
+      toast.error(error.response?.data?.error || "Error creating booking")
     }
   }
 
   const handleMessage = async (e) => {
     e.preventDefault()
-    if (!isAuthenticated) return alert("Please log in")
+    if (!isAuthenticated) return toast.error("Please log in")
     try {
       await api.post(
         "/messages",
         { propertyId: property.id, receiverId: property.agentId, message },
         { headers: { Authorization: `Bearer ${user.token}` } },
       )
-      alert("Message sent!")
+
+      toast.success('Message sent')
       setIsMessageModalOpen(false)
       setMessage("")
     } catch (error) {
-      alert(error.response?.data?.error || "Error sending message")
+      toast.error(error.response?.data?.error || "Error sending message")
     }
   }
 
@@ -324,6 +326,7 @@ const SingleProperty = () => {
       <div>
         <Footer />
       </div>
+      <ToastContainer autoClose={2000}/>
     </div>
   )
 }

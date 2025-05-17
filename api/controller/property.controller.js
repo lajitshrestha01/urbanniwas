@@ -43,7 +43,7 @@ export const getProperty = async (req, res) => {
     try {
         const property = await prisma.property.findUnique({ 
             where: { id },
-            include:{ agent: {select: {id: true, name: true, phoneNumber: true, agencyName: true}}},
+            include:{ agent: {select: {id: true, name: true, phoneNumber: true, agencyName: true, avatar: true}}},
          });
 
 

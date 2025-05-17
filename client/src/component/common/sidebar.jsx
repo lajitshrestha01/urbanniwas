@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Menu, Home, Building2, PlusCircle, Mail, User, LogOut, ChevronRight, CalendarPlus } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
-const Sidebar = () => {
+const Sidebar = ({role}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  const menuItems = [
+  const agentMenu = [
     { name: "Dashboard", icon: <Home size={20} />, path: '/agent/dashboard' },
     { name: "My Properties", icon: <Building2 size={20} />, path: '/agent/properties' },
     { name: "Add Property", icon: <PlusCircle size={20} />, path: '/agent/add-property' },
@@ -16,8 +16,18 @@ const Sidebar = () => {
     { name: "Booking Request", icon: <CalendarPlus size={20} />, path: '/agent/booking-request' },
     { name: "Profile", icon: <User size={20} />, path: '/agent/profile' },
   ];
+
+  const clientMenu =[
+    { name: "Dashboard", icon: <Home size={20} />, path: '/client/dashboard' },
+    { name: "Favorite Properties", icon: <Building2 size={20} />, path: '/client/favorites' },
+    { name: "Book Visits", icon: <CalendarPlus size={20} />, path: '/client/visits' },
+    { name: "Messages", icon: <Mail size={20} />, path: '/client/message' },
+    { name: "Profile", icon: <User size={20} />, path: '/client/profile' },
+  ]
   
-  const location = useLocation;
+  const menuItems = role ==="AGENT" ? agentMenu : clientMenu;
+  const location = useLocation();
+  console.log(role);
 
   return (
     <>

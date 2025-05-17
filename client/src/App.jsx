@@ -17,6 +17,7 @@ import LalitpurProperties from "./page/cities/lalitpurProperty";
 import FavoritesPage from "./page/favorites";
 import EditProperty from "./page/Edit";
 import BookingRequest from "./component/dashboard/booking";
+import BookVisit from "./component/dashboard/bookingVisitClient";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/agent/properties" element={<Myproperties />} />
           <Route path="/agent/add-property" element={<AddPropertyForm />} />
           <Route path="/agent/booking-request" element={<BookingRequest />} />
+          <Route path="/client/visits" element={<BookVisit />} />
           <Route path="/property/:id" element={<SingleProperty />} />
           <Route path="/agent/dashboard" element={<AgentDashboard />} />
           <Route path="/properties/city/kathmandu" element={<KathmanduProperties />} />
