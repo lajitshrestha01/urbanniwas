@@ -1,29 +1,29 @@
-import { useState } from "react"
-import api from "../../utlis/axios"
-import { useNavigate } from "react-router-dom"
-import DashboardLayout from "../../component/layout/dashboardLayout"
+import { useState } from 'react';
+import api from '../../utlis/axios';
+import { useNavigate } from 'react-router-dom';
+import DashboardLayout from '../../component/layout/dashboardLayout';
 
 const AddPropertyForm = () => {
-  const navigate = useNavigate()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [notification, setNotification] = useState({ show: false, message: "", type: "" })
-  const [properties, setProperties] = useState([])
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
+  const [properties, setProperties] = useState([]);
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    price: "",
-    type: "HOUSE",
-    status: "FOR_SALE",
-    bedrooms: "",
-    bathrooms: "",
-    area: "",
-    address: "",
-    city: "",
+    title: '',
+    description: '',
+    price: '',
+    type: 'HOUSE',
+    status: 'FOR_SALE',
+    bedrooms: '',
+    bathrooms: '',
+    area: '',
+    address: '',
+    city: '',
     features: [],
     images: [],
-    latitude: "",
-    longitude: "",
-  })
+    latitude: '',
+    longitude: '',
+  });
   const [feature, setFeature] = useState({
     parking: false,
     gym: false,
@@ -34,131 +34,135 @@ const AddPropertyForm = () => {
     security: false,
     furnished: false,
     unfurnished: false,
-  })
+  });
 
   // Show notification
   const showNotification = (message, type) => {
-    setNotification({ show: true, message, type })
+    setNotification({ show: true, message, type });
     setTimeout(() => {
-      setNotification({ show: false, message: "", type: "" })
-    }, 3000)
-  }
+      setNotification({ show: false, message: '', type: '' });
+    }, 3000);
+  };
 
   // Form input handler
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   // Add feature to formData.features
-  const handleFeatureChange = (e) => {
-    const { name, checked } = e.target
-    setFeature((prev) => ({
+  const handleFeatureChange = e => {
+    const { name, checked } = e.target;
+    setFeature(prev => ({
       ...prev,
       [name]: checked,
-    }))
+    }));
 
     if (checked) {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
         features: [...prev.features, name],
-      }))
+      }));
     } else {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        features: prev.features.filter((feature) => feature !== name),
-      }))
+        features: prev.features.filter(feature => feature !== name),
+      }));
     }
-  }
+  };
 
   // Handle image upload to Cloudinary
-  const handleImageUpload = async (e) => {
-    const files = Array.from(e.target.files)
-    const cloudName = "dpxbzk49v"
-    const maxImages = 6
-    const remainingSlots = maxImages - formData.images.length
+  const handleImageUpload = async e => {
+    const files = Array.from(e.target.files);
+    const cloudName = 'dpxbzk49v';
+    const maxImages = 6;
+    const remainingSlots = maxImages - formData.images.length;
 
     if (remainingSlots <= 0) {
-      showNotification(`You can upload a maximum of ${maxImages} images.`, "error")
-      return
+      showNotification(`You can upload a maximum of ${maxImages} images.`, 'error');
+      return;
     }
 
     if (files.length > remainingSlots) {
-      showNotification(`Only uploading the first ${remainingSlots} images. Maximum is ${maxImages}.`, "warning")
+      showNotification(
+        `Only uploading the first ${remainingSlots} images. Maximum is ${maxImages}.`,
+        'warning'
+      );
     }
 
     try {
-      setIsSubmitting(true)
-      const filesToUpload = files.slice(0, remainingSlots)
+      setIsSubmitting(true);
+      const filesToUpload = files.slice(0, remainingSlots);
 
-      const uploadPromises = filesToUpload.map(async (file) => {
-        const formData = new FormData()
-        formData.append("file", file)
-        formData.append("upload_preset", "UrbanNiwas")
+      const uploadPromises = filesToUpload.map(async file => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'UrbanNiwas');
 
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-          method: "POST",
+          method: 'POST',
           body: formData,
-        })
+        });
 
-        const data = await response.json()
-        if (!response.ok) throw new Error(`Upload failed: ${data.error?.message || "Unknown error"}`)
-        return data.secure_url
-      })
+        const data = await response.json();
+        if (!response.ok)
+          throw new Error(`Upload failed: ${data.error?.message || 'Unknown error'}`);
+        return data.secure_url;
+      });
 
-      const imageUrls = await Promise.all(uploadPromises)
-      setFormData((prev) => ({
+      const imageUrls = await Promise.all(uploadPromises);
+      setFormData(prev => ({
         ...prev,
         images: [...prev.images, ...imageUrls],
-      }))
-      showNotification(`Successfully uploaded ${imageUrls.length} images`, "success")
+      }));
+      showNotification(`Successfully uploaded ${imageUrls.length} images`, 'success');
     } catch (error) {
-      console.error("Error uploading images:", error)
-      showNotification("Failed to upload images. Please try again.", "error")
+      console.error('Error uploading images:', error);
+      showNotification('Failed to upload images. Please try again.', 'error');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  const removeImage = (index) => {
-    setFormData((prev) => ({
+  const removeImage = index => {
+    setFormData(prev => ({
       ...prev,
       images: prev.images.filter((_, i) => i !== index),
-    }))
-    showNotification("Image removed", "success")
-  }
+    }));
+    showNotification('Image removed', 'success');
+  };
 
   // Validate form before submission
   const validateForm = () => {
-    const requiredFields = ["title", "description", "price", "type", "status", "address", "city"]
-    const missingFields = requiredFields.filter((field) => !formData[field])
+    const requiredFields = ['title', 'description', 'price', 'type', 'status', 'address', 'city'];
+    const missingFields = requiredFields.filter(field => !formData[field]);
 
     if (missingFields.length > 0) {
-      showNotification(`Please fill in all required fields: ${missingFields.join(", ")}`, "error")
-      return false
+      showNotification(`Please fill in all required fields: ${missingFields.join(', ')}`, 'error');
+      return false;
     }
 
     if (formData.images.length === 0) {
-      showNotification("Please upload at least one image", "error")
-      return false
+      showNotification('Please upload at least one image', 'error');
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
   // Submit new property
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async e => {
+    e.preventDefault();
 
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    const loggedInUser = JSON.parse(localStorage.getItem("user"))
+    const loggedInUser = JSON.parse(localStorage.getItem('user'));
     if (!loggedInUser) {
-      showNotification("You must be logged in to post a property.", "error")
-      return
+      showNotification('You must be logged in to post a property.', 'error');
+      return;
     }
 
     const propertyData = {
@@ -170,21 +174,24 @@ const AddPropertyForm = () => {
       latitude: Number.parseFloat(formData.latitude) || 0,
       longitude: Number.parseFloat(formData.longitude) || 0,
       agentId: loggedInUser.id,
-    }
+    };
 
     try {
-      setIsSubmitting(true)
-      const response = await api.post("/properties", propertyData)
-      setProperties((prev) => [...prev, response.data])
-      showNotification("Property added successfully!", "success")
-      navigate("/agent/properties")
+      setIsSubmitting(true);
+      const response = await api.post('/properties', propertyData);
+      setProperties(prev => [...prev, response.data]);
+      showNotification('Property added successfully!', 'success');
+      navigate('/agent/properties');
     } catch (error) {
-      console.error("Error adding property:", error)
-      showNotification(error.response?.data?.message || "Failed to add property. Please try again.", "error")
+      console.error('Error adding property:', error);
+      showNotification(
+        error.response?.data?.message || 'Failed to add property. Please try again.',
+        'error'
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <DashboardLayout>
@@ -192,11 +199,11 @@ const AddPropertyForm = () => {
       {notification.show && (
         <div
           className={`fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg ${
-            notification.type === "success"
-              ? "bg-green-100 text-green-800 border-l-4 border-green-500"
-              : notification.type === "error"
-                ? "bg-red-100 text-red-800 border-l-4 border-red-500"
-                : "bg-yellow-100 text-yellow-800 border-l-4 border-yellow-500"
+            notification.type === 'success'
+              ? 'bg-green-100 text-green-800 border-l-4 border-green-500'
+              : notification.type === 'error'
+                ? 'bg-red-100 text-red-800 border-l-4 border-red-500'
+                : 'bg-yellow-100 text-yellow-800 border-l-4 border-yellow-500'
           }`}
         >
           {notification.message}
@@ -250,7 +257,9 @@ const AddPropertyForm = () => {
                       Price <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">₹</span>
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                        ₹
+                      </span>
                       <input
                         type="text"
                         name="price"
@@ -395,8 +404,12 @@ const AddPropertyForm = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium text-gray-700">Property Features</label>
-                  <p className="text-gray-500 text-sm">Select all the features that apply to this property</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Property Features
+                  </label>
+                  <p className="text-gray-500 text-sm">
+                    Select all the features that apply to this property
+                  </p>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="flex items-center space-x-2">
                       <input
@@ -524,11 +537,13 @@ const AddPropertyForm = () => {
             <div className="mt-8 p-6 border border-gray-300 rounded-lg bg-white">
               <div className="mb-4">
                 <h2 className="text-xl font-bold text-gray-800">Property Images</h2>
-                <p className="text-gray-500 text-sm">Upload high-quality images of your property (max 6 images)</p>
+                <p className="text-gray-500 text-sm">
+                  Upload high-quality images of your property (max 6 images)
+                </p>
               </div>
               <div className="flex items-center space-x-4">
                 <label
-                  className={`flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <svg
                     className="w-5 h-5 mr-2 text-gray-600"
@@ -554,7 +569,9 @@ const AddPropertyForm = () => {
                     disabled={isSubmitting || formData.images.length >= 6}
                   />
                 </label>
-                <span className="text-sm text-gray-500">{formData.images.length}/6 images uploaded</span>
+                <span className="text-sm text-gray-500">
+                  {formData.images.length}/6 images uploaded
+                </span>
               </div>
 
               {/* Display Image Previews */}
@@ -562,7 +579,7 @@ const AddPropertyForm = () => {
                 {formData.images.map((img, index) => (
                   <div key={index} className="relative group">
                     <img
-                      src={img || "/placeholder.svg"}
+                      src={img || '/placeholder.svg'}
                       alt={`Property Image ${index + 1}`}
                       className="w-full h-24 object-cover rounded-lg shadow-sm"
                     />
@@ -615,7 +632,7 @@ const AddPropertyForm = () => {
               </button>
               <button
                 type="submit"
-                className={`px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition flex items-center ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
+                className={`px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition flex items-center ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -643,7 +660,7 @@ const AddPropertyForm = () => {
                     Processing...
                   </>
                 ) : (
-                  "Create Property"
+                  'Create Property'
                 )}
               </button>
             </div>
@@ -651,7 +668,7 @@ const AddPropertyForm = () => {
         </div>
       </div>
     </DashboardLayout>
-  )
-}
+  );
+};
 
 export default AddPropertyForm;

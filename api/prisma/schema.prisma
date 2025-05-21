@@ -70,6 +70,7 @@ model Message {
   propertyId  String    @db.ObjectId
   message     String
   createdAt   DateTime  @default(now())
+  seenBy      String[]  @db.ObjectId // Array of user IDs who have seen the message
   sender      User      @relation("SentMessages", fields: [senderId], references: [id])
   receiver    User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
   property    Property  @relation("PropertyMessages", fields: [propertyId], references: [id])

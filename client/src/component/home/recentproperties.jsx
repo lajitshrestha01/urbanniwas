@@ -19,7 +19,7 @@ const RecentProperties = () => {
   }, []);
 
   return (
-    <PropertySection 
+    <PropertySection
       title="Recent Properties"
       properties={recentProperties}
       viewAllLink="/properties/recent"

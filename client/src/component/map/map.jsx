@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
-import { useParams } from "react-router-dom";
-import api from "../../utlis/axios";
-import "leaflet/dist/leaflet.css";
+import { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
+import { useParams } from 'react-router-dom';
+import api from '../../utlis/axios';
+import 'leaflet/dist/leaflet.css';
 
 const Maps = () => {
   const { id } = useParams();
@@ -22,12 +22,12 @@ const Maps = () => {
           {
             latitude: fetchedProperty.latitude,
             longitude: fetchedProperty.longitude,
-            title: fetchedProperty.title || "Property",
-            address: fetchedProperty.address || "No address provided",
+            title: fetchedProperty.title || 'Property',
+            address: fetchedProperty.address || 'No address provided',
           },
         ]);
       } catch (error) {
-        setError("Failed to load property!");
+        setError('Failed to load property!');
         console.error(error);
       } finally {
         setLoading(false);
@@ -51,7 +51,7 @@ const Maps = () => {
       : [51.505, -0.09];
 
   return (
-    <MapContainer center={mapCenter} zoom={15} style={{ height: "400px", width: "100%" }}>
+    <MapContainer center={mapCenter} zoom={15} style={{ height: '400px', width: '100%' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

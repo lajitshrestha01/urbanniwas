@@ -1,26 +1,26 @@
-import { useState, useEffect } from "react";
-import api from "../../utlis/axios";
-import useUserStore from "../../zustand/store";
-import { Calendar, MapPin } from "lucide-react";
-import DashboardLayout from "../layout/dashboardLayout";
-import { toast } from "react-toastify";
+import { useState, useEffect } from 'react';
+import api from '../../utlis/axios';
+import useUserStore from '../../zustand/store';
+import { Calendar, MapPin } from 'lucide-react';
+import DashboardLayout from '../layout/dashboardLayout';
+import { toast } from 'react-toastify';
 
 const BookVisit = () => {
   const { user, isAuthenticated } = useUserStore();
   const [bookings, setBookings] = useState([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated) return;
     const fetchBookings = async () => {
       try {
-        const endpoint = user.role === "CLIENT" ? "/bookings/user" : "/bookings/agent";
+        const endpoint = user.role === 'CLIENT' ? '/bookings/user' : '/bookings/agent';
         const res = await api.get(endpoint, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setBookings(res.data);
       } catch (err) {
-        setError(err.message || "Failed to load bookings");
+        setError(err.message || 'Failed to load bookings');
       }
     };
     fetchBookings();
@@ -33,22 +33,20 @@ const BookVisit = () => {
         { status },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
-      setBookings((prev) =>
-        prev.map((b) => (b.id === id ? { ...b, status } : b))
-      );
+      setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
     } catch (error) {
-      toast.error(error.message || "Failed to update booking");
+      toast.error(error.message || 'Failed to update booking');
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async id => {
     try {
       await api.delete(`/bookings/${id}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
-      setBookings((prev) => prev.filter((b) => b.id !== id));
+      setBookings(prev => prev.filter(b => b.id !== id));
     } catch (error) {
-      toast.error(error.message || "Failed to delete booking");
+      toast.error(error.message || 'Failed to delete booking');
     }
   };
 
@@ -60,7 +58,7 @@ const BookVisit = () => {
     <DashboardLayout>
       <div className="w-full mx-auto px-4 py-12">
         <h1 className="text-3xl font-playfair font-bold text-[#1A2B3C] mb-6">
-          {user.role === "AGENT" ? "Agent Bookings" : "My Bookings"}
+          {user.role === 'AGENT' ? 'Agent Bookings' : 'My Bookings'}
         </h1>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {bookings.length === 0 ? (
@@ -74,12 +72,12 @@ const BookVisit = () => {
                   <th className="p-3">Date</th>
                   <th className="p-3">Time</th>
                   <th className="p-3">Status</th>
-                  {user.role === "AGENT" && <th className="p-3">Client</th>}
+                  {user.role === 'AGENT' && <th className="p-3">Client</th>}
                   <th className="p-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {bookings.map((booking) => (
+                {bookings.map(booking => (
                   <tr key={booking.id} className="border-t">
                     <td className="p-3 flex items-center">
                       <MapPin className="text-[#D4AF37] w-5 h-5 mr-2" />
@@ -91,24 +89,18 @@ const BookVisit = () => {
                     </td>
                     <td className="p-3">{booking.timeSlot}</td>
                     <td className="p-3">{booking.status}</td>
-                    {user.role === "AGENT" && (
-                      <td className="p-3">{booking.user.email}</td>
-                    )}
+                    {user.role === 'AGENT' && <td className="p-3">{booking.user.email}</td>}
                     <td className="p-3">
-                      {user.role === "AGENT" && booking.status === "PENDING" && (
+                      {user.role === 'AGENT' && booking.status === 'PENDING' && (
                         <>
                           <button
-                            onClick={() =>
-                              handleStatusChange(booking.id, "CONFIRMED")
-                            }
+                            onClick={() => handleStatusChange(booking.id, 'CONFIRMED')}
                             className="mr-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
                           >
                             Confirm
                           </button>
                           <button
-                            onClick={() =>
-                              handleStatusChange(booking.id, "CANCELLED")
-                            }
+                            onClick={() => handleStatusChange(booking.id, 'CANCELLED')}
                             className="mr-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                           >
                             Cancel
@@ -119,7 +111,7 @@ const BookVisit = () => {
                         onClick={() => handleDelete(booking.id)}
                         className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600"
                       >
-                        {user.role === "AGENT" ? "Delete" : "Cancel"}
+                        {user.role === 'AGENT' ? 'Delete' : 'Cancel'}
                       </button>
                     </td>
                   </tr>

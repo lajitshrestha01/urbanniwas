@@ -1,35 +1,35 @@
-import { useEffect, useState } from "react"
-import api from "../../utlis/axios"
-import { Home, MapPin, DollarSign, Bed, Bath, Square, Loader2, AlertCircle } from "lucide-react"
+import { useEffect, useState } from 'react';
+import api from '../../utlis/axios';
+import { Home, MapPin, DollarSign, Bed, Bath, Square, Loader2, AlertCircle } from 'lucide-react';
 
 const LalitpurProperties = () => {
-  const [properties, setProperties] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const res = await api.get("properties/city/lalitpur");
-        setProperties(res.data)
-        setError(false)
+        const res = await api.get('properties/city/lalitpur');
+        setProperties(res.data);
+        setError(false);
       } catch (error) {
-        console.error("Error fetching bhatapur Properties:", error)
-        setError(true)
+        console.error('Error fetching bhatapur Properties:', error);
+        setError(true);
       }
-      setLoading(false)
-    }
-    fetchProperties()
-  }, [])
+      setLoading(false);
+    };
+    fetchProperties();
+  }, []);
 
   // Format price to Nepali Rupees
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("ne-NP", {
-      style: "currency",
-      currency: "NPR",
+  const formatPrice = price => {
+    return new Intl.NumberFormat('ne-NP', {
+      style: 'currency',
+      currency: 'NPR',
       maximumFractionDigits: 0,
-    }).format(price)
-  }
+    }).format(price);
+  };
 
   if (loading) {
     return (
@@ -37,7 +37,7 @@ const LalitpurProperties = () => {
         <Loader2 className="w-10 h-10 text-blue-500 animate-spin mb-4" />
         <p className="text-lg font-medium text-gray-600">Loading properties...</p>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -49,7 +49,7 @@ const LalitpurProperties = () => {
           We encountered an error while fetching properties in Lalitpur. Please try again later.
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -61,7 +61,7 @@ const LalitpurProperties = () => {
 
       {properties.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
+          {properties.map(property => (
             <div
               key={property.id}
               className="border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
@@ -69,12 +69,12 @@ const LalitpurProperties = () => {
               {property.image && (
                 <div className="h-48 overflow-hidden bg-gray-100">
                   <img
-                    src={property.image || "/placeholder.svg"}
+                    src={property.image || '/placeholder.svg'}
                     alt={property.title}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = "/placeholder.svg?height=200&width=400"
-                      e.currentTarget.alt = "Property image unavailable"
+                    onError={e => {
+                      e.currentTarget.src = '/placeholder.svg?height=200&width=400';
+                      e.currentTarget.alt = 'Property image unavailable';
                     }}
                   />
                 </div>
@@ -82,12 +82,14 @@ const LalitpurProperties = () => {
 
               <div className="p-4">
                 <div className="flex items-start justify-between mb-2">
-                  <h2 className="text-xl font-semibold text-gray-800 line-clamp-1">{property.title}</h2>
+                  <h2 className="text-xl font-semibold text-gray-800 line-clamp-1">
+                    {property.title}
+                  </h2>
                 </div>
 
                 <div className="flex items-center text-gray-600 mb-3">
                   <MapPin className="w-4 h-4 mr-1 text-blue-500" />
-                  <span className="text-sm">{property.location || "Lalitpur"}</span>
+                  <span className="text-sm">{property.location || 'Lalitpur'}</span>
                 </div>
 
                 <p className="text-gray-600 mb-4 line-clamp-2">{property.description}</p>
@@ -118,7 +120,7 @@ const LalitpurProperties = () => {
                 <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                   <div className="flex items-center text-blue-600 font-bold">
                     <DollarSign className="w-5 h-5 mr-1" />
-                    <span>{property.price ? formatPrice(property.price) : "Price on request"}</span>
+                    <span>{property.price ? formatPrice(property.price) : 'Price on request'}</span>
                   </div>
 
                   <button className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm">
@@ -133,11 +135,13 @@ const LalitpurProperties = () => {
         <div className="bg-gray-50 rounded-lg p-8 text-center">
           <Home className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <p className="text-xl font-medium text-gray-600 mb-2">No properties found for Lalitpur</p>
-          <p className="text-gray-500">Check back later for new listings or try a different location.</p>
+          <p className="text-gray-500">
+            Check back later for new listings or try a different location.
+          </p>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default LalitpurProperties;

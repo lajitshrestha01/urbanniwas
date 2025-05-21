@@ -14,7 +14,7 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfileMenu = () => setIsProfileMenuOpen(!isProfileMenuOpen);
 
-  const handleLogout = () => {  
+  const handleLogout = () => {
     logoutUser(); // Call Zustand logoutUser function
     navigate('/'); // Redirect to home
   };
@@ -31,9 +31,24 @@ const Navbar = () => {
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8 items-center">
-              <Link to="/" className="text-gray-500 hover:text-indigo-700 px-1 pt-1 text-sm font-medium">Home</Link>
-              <Link to="/buy" className="text-gray-500 hover:text-indigo-700 px-1 pt-1 text-sm font-medium">Buy</Link>
-              <Link to="/rent" className="text-gray-500 hover:text-indigo-700 px-1 pt-1 text-sm font-medium">Rent</Link>
+              <Link
+                to="/"
+                className="text-gray-500 hover:text-indigo-700 px-1 pt-1 text-sm font-medium"
+              >
+                Home
+              </Link>
+              <Link
+                to="/buy"
+                className="text-gray-500 hover:text-indigo-700 px-1 pt-1 text-sm font-medium"
+              >
+                Buy
+              </Link>
+              <Link
+                to="/rent"
+                className="text-gray-500 hover:text-indigo-700 px-1 pt-1 text-sm font-medium"
+              >
+                Rent
+              </Link>
             </div>
           </div>
 
@@ -41,30 +56,61 @@ const Navbar = () => {
           <div className="hidden sm:ml-6 sm:flex sm:items-center z-100">
             {isAuthenticated ? (
               <div className="ml-3 relative">
-                <button onClick={toggleProfileMenu} className="flex items-center text-sm focus:outline-none">
-                  <img className="h-10 w-10 rounded-full cursor-pointer" src={user.avatar || 'https://picsum.photos/200/300?grayscale'} alt={user.name} />
+                <button
+                  onClick={toggleProfileMenu}
+                  className="flex items-center text-sm focus:outline-none"
+                >
+                  <img
+                    className="h-10 w-10 rounded-full cursor-pointer"
+                    src={user.avatar || 'https://picsum.photos/200/300?grayscale'}
+                    alt={user.name}
+                  />
                   <span className="ml-2 text-gray-700 cursor-pointer">{user.name}</span>
                 </button>
                 {isProfileMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white">
-                    {role === "AGENT" && (
+                    {role === 'AGENT' && (
                       <>
-                        <Link to="/agent/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</Link>
-
+                        <Link
+                          to="/agent/dashboard"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Dashboard
+                        </Link>
                       </>
                     )}
-                    {role === "CLIENT" && (
+                    {role === 'CLIENT' && (
                       <>
-                        <Link to="/client/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</Link>
-                        <Link to="/client/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashbaord</Link>
+                        <Link
+                          to="/client/profile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Profile
+                        </Link>
+                        <Link
+                          to="/client/dashboard"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Dashbaord
+                        </Link>
                       </>
                     )}
-                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</button>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Sign out
+                    </button>
                   </div>
                 )}
               </div>
             ) : (
-              <Link to="/login" className="ml-8 px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">Sign in</Link>
+              <Link
+                to="/login"
+                className="ml-8 px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-md"
+              >
+                Sign in
+              </Link>
             )}
           </div>
         </div>

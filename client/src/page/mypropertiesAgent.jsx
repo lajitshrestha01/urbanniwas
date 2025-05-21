@@ -1,84 +1,84 @@
-import { useState, useEffect } from "react"
-import api from "../utlis/axios"
-import "leaflet/dist/leaflet.css"
-import { useNavigate } from "react-router-dom"
-import DashboardLayout from "../component/layout/dashboardLayout"
-import { PlusCircle, AlertCircle, Search, ArrowUpDown } from "lucide-react"
+import { useState, useEffect } from 'react';
+import api from '../utlis/axios';
+import 'leaflet/dist/leaflet.css';
+import { useNavigate } from 'react-router-dom';
+import DashboardLayout from '../component/layout/dashboardLayout';
+import { PlusCircle, AlertCircle, Search, ArrowUpDown } from 'lucide-react';
 
 const PropertyList = () => {
-  const navigate = useNavigate()
-  const [properties, setProperties] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [sortOrder, setSortOrder] = useState("newest")
+  const navigate = useNavigate();
+  const [properties, setProperties] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('newest');
 
   // Fetch properties on mount
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem("user"))
+    const loggedInUser = JSON.parse(localStorage.getItem('user'));
     if (loggedInUser) {
       const fetchProperties = async () => {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
-          const response = await api.get(`/properties?agentId=${loggedInUser.id}`)
-          setProperties(response.data)
-          setError(null)
+          const response = await api.get(`/properties?agentId=${loggedInUser.id}`);
+          setProperties(response.data);
+          setError(null);
         } catch (error) {
-          console.error("Error fetching properties:", error)
-          setError("Failed to load properties. Please try again later.")
+          console.error('Error fetching properties:', error);
+          setError('Failed to load properties. Please try again later.');
         } finally {
-          setIsLoading(false)
+          setIsLoading(false);
         }
-      }
-      fetchProperties()
+      };
+      fetchProperties();
     } else {
-      setIsLoading(false)
-      setError("You must be logged in to view properties.")
+      setIsLoading(false);
+      setError('You must be logged in to view properties.');
     }
-  }, [])
+  }, []);
 
-  const handleCardClick = (id) => {
-    navigate(`/property/${id}`)
-  }
+  const handleCardClick = id => {
+    navigate(`/property/${id}`);
+  };
 
   const handleEditProperty = (e, id) => {
-    e.stopPropagation() // Prevent card click event
-    navigate(`/property/edit/${id}`)
-  }
+    e.stopPropagation(); // Prevent card click event
+    navigate(`/property/edit/${id}`);
+  };
 
   const handleDeleteProperty = async (e, id) => {
-    e.stopPropagation() // Prevent card click event
+    e.stopPropagation(); // Prevent card click event
 
-    if (window.confirm("Are you sure you want to delete this property?")) {
+    if (window.confirm('Are you sure you want to delete this property?')) {
       try {
-        await api.delete(`/properties/${id}`)
-        setProperties((prev) => prev.filter((property) => property.id !== id))
+        await api.delete(`/properties/${id}`);
+        setProperties(prev => prev.filter(property => property.id !== id));
       } catch (error) {
-        console.error("Error deleting property:", error)
-        alert("Failed to delete property. Please try again.")
+        console.error('Error deleting property:', error);
+        alert('Failed to delete property. Please try again.');
       }
     }
-  }
+  };
 
   const handleAddProperty = () => {
-    navigate("/agent/add-property")
-  }
+    navigate('/agent/add-property');
+  };
 
   // Filter properties based on search term
   const filteredProperties = properties.filter(
-    (property) =>
+    property =>
       property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.city.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      property.city.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Sort properties
   const sortedProperties = [...filteredProperties].sort((a, b) => {
-    if (sortOrder === "price-asc") return a.price - b.price
-    if (sortOrder === "price-desc") return b.price - a.price
-    if (sortOrder === "newest") return new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-    return 0
-  })
+    if (sortOrder === 'price-asc') return a.price - b.price;
+    if (sortOrder === 'price-desc') return b.price - a.price;
+    if (sortOrder === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    return 0;
+  });
 
   return (
     <DashboardLayout>
@@ -101,12 +101,15 @@ const PropertyList = () => {
           {/* Search and Filter Bar */}
           <div className="bg-white rounded-xl shadow-md p-4 mb-6 flex flex-col md:flex-row gap-4 items-center">
             <div className="relative flex-grow">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={18}
+              />
               <input
                 type="text"
                 placeholder="Search by title, address or city..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -114,7 +117,7 @@ const PropertyList = () => {
               <ArrowUpDown size={18} className="text-gray-500" />
               <select
                 value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
+                onChange={e => setSortOrder(e.target.value)}
                 className="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               >
                 <option value="newest">Newest First</option>
@@ -150,7 +153,7 @@ const PropertyList = () => {
                   <>
                     <p className="text-xl mb-4">No properties match your search.</p>
                     <button
-                      onClick={() => setSearchTerm("")}
+                      onClick={() => setSearchTerm('')}
                       className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
                     >
                       Clear Search
@@ -163,7 +166,8 @@ const PropertyList = () => {
                     </div>
                     <p className="text-xl mb-4 font-medium">No properties listed yet.</p>
                     <p className="mb-6 text-center max-w-md">
-                      Add your first property to start showcasing your listings to potential clients.
+                      Add your first property to start showcasing your listings to potential
+                      clients.
                     </p>
                     <button
                       onClick={handleAddProperty}
@@ -178,13 +182,13 @@ const PropertyList = () => {
               <>
                 <p className="text-gray-500 mb-6">{sortedProperties.length} properties found</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {sortedProperties.map((property) => (
+                  {sortedProperties.map(property => (
                     <PropertyCardWithActions
                       key={property.id}
                       property={property}
                       onClick={() => handleCardClick(property.id)}
-                      onEdit={(e) => handleEditProperty(e, property.id)}
-                      onDelete={(e) => handleDeleteProperty(e, property.id)}
+                      onEdit={e => handleEditProperty(e, property.id)}
+                      onDelete={e => handleDeleteProperty(e, property.id)}
                     />
                   ))}
                 </div>
@@ -194,8 +198,8 @@ const PropertyList = () => {
         </div>
       </div>
     </DashboardLayout>
-  )
-}
+  );
+};
 
 // Enhanced PropertyCard with action buttons
 const PropertyCardWithActions = ({ property, onClick, onEdit, onDelete }) => {
@@ -208,7 +212,7 @@ const PropertyCardWithActions = ({ property, onClick, onEdit, onDelete }) => {
       <div className="relative h-52 bg-gray-200 overflow-hidden">
         {property.images && property.images.length > 0 ? (
           <img
-            src={property.images[0] || "/placeholder.svg"}
+            src={property.images[0] || '/placeholder.svg'}
             alt={property.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
@@ -220,14 +224,18 @@ const PropertyCardWithActions = ({ property, onClick, onEdit, onDelete }) => {
         {/* Status Badge */}
         <div
           className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-md ${
-            property.status === "FOR_SALE"
-              ? "bg-green-500 text-white"
-              : property.status === "FOR_RENT"
-                ? "bg-blue-500 text-white"
-                : "bg-yellow-500 text-white"
+            property.status === 'FOR_SALE'
+              ? 'bg-green-500 text-white'
+              : property.status === 'FOR_RENT'
+                ? 'bg-blue-500 text-white'
+                : 'bg-yellow-500 text-white'
           }`}
         >
-          {property.status === "FOR_SALE" ? "For Sale" : property.status === "FOR_RENT" ? "For Rent" : "Sold"}
+          {property.status === 'FOR_SALE'
+            ? 'For Sale'
+            : property.status === 'FOR_RENT'
+              ? 'For Rent'
+              : 'Sold'}
         </div>
       </div>
 
@@ -242,17 +250,19 @@ const PropertyCardWithActions = ({ property, onClick, onEdit, onDelete }) => {
 
         <div className="flex items-center justify-between mb-4">
           <p className="text-lg font-bold text-blue-600">
-            ${typeof property.price === "number" ? property.price.toLocaleString() : property.price}
-            {property.status === "FOR_RENT" && <span className="text-sm font-normal text-gray-500">/month</span>}
+            ${typeof property.price === 'number' ? property.price.toLocaleString() : property.price}
+            {property.status === 'FOR_RENT' && (
+              <span className="text-sm font-normal text-gray-500">/month</span>
+            )}
           </p>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <span className="flex items-center">
               <span className="font-semibold mr-1">{property.bedrooms}</span> beds
-            </span>{" "}
+            </span>{' '}
             •
             <span className="flex items-center">
               <span className="font-semibold mr-1">{property.bathrooms}</span> baths
-            </span>{" "}
+            </span>{' '}
             •
             <span className="flex items-center">
               <span className="font-semibold mr-1">{property.area}</span> sqft
@@ -277,7 +287,7 @@ const PropertyCardWithActions = ({ property, onClick, onEdit, onDelete }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default PropertyList;

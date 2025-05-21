@@ -1,66 +1,66 @@
-import { useState, useEffect } from "react"
-import api from "../../utlis/axios.js"
-import { useParams } from "react-router-dom"
-import { ChevronLeft, ChevronRight, X } from "lucide-react"
+import { useState, useEffect } from 'react';
+import api from '../../utlis/axios.js';
+import { useParams } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 const HeroSection = () => {
-  const { id } = useParams()
-  const [property, setProperty] = useState(null)
-  const [error, setError] = useState(null)
-  const [imageIndex, setImageIndex] = useState(0)
-  const [isHovering, setIsHovering] = useState(false)
-  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const { id } = useParams();
+  const [property, setProperty] = useState(null);
+  const [error, setError] = useState(null);
+  const [imageIndex, setImageIndex] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const response = await api.get(`/properties/${id}`)
-        setProperty(response.data)
+        const response = await api.get(`/properties/${id}`);
+        setProperty(response.data);
       } catch (error) {
-        setError("Failed to load property!")
-        console.error(error)
+        setError('Failed to load property!');
+        console.error(error);
       }
-    }
+    };
 
-    fetchProperty()
-  }, [id])
+    fetchProperty();
+  }, [id]);
 
   // Handle the next and previous image navigation
-  const nextImage = (e) => {
-    if (e) e.stopPropagation()
+  const nextImage = e => {
+    if (e) e.stopPropagation();
     if (property && property.images) {
-      setImageIndex((prevIndex) => (prevIndex + 1) % property.images.length)
+      setImageIndex(prevIndex => (prevIndex + 1) % property.images.length);
     }
-  }
+  };
 
-  const prevImage = (e) => {
-    if (e) e.stopPropagation()
+  const prevImage = e => {
+    if (e) e.stopPropagation();
     if (property && property.images) {
-      setImageIndex((prevIndex) => (prevIndex - 1 + property.images.length) % property.images.length)
+      setImageIndex(prevIndex => (prevIndex - 1 + property.images.length) % property.images.length);
     }
-  }
+  };
 
   // Open lightbox to view full image
   const openLightbox = () => {
-    setLightboxOpen(true)
-    document.body.style.overflow = "hidden"
-  }
+    setLightboxOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
 
   const closeLightbox = () => {
-    setLightboxOpen(false)
-    document.body.style.overflow = "auto"
-  }
+    setLightboxOpen(false);
+    document.body.style.overflow = 'auto';
+  };
 
   // Auto slide the image every 3 seconds, but only if not hovering
   useEffect(() => {
-    if (isHovering) return // Don't auto-slide when user is hovering
+    if (isHovering) return; // Don't auto-slide when user is hovering
 
-    const interval = setInterval(nextImage, 3000)
-    return () => clearInterval(interval)
-  }, [property, isHovering])
+    const interval = setInterval(nextImage, 3000);
+    return () => clearInterval(interval);
+  }, [property, isHovering]);
 
-  if (error) return <p className="text-red-500 text-center mt-4">{error}</p>
-  if (!property) return <p className="text-center mt-4">Loading...</p>
+  if (error) return <p className="text-red-500 text-center mt-4">{error}</p>;
+  if (!property) return <p className="text-center mt-4">Loading...</p>;
 
   return (
     <>
@@ -72,12 +72,14 @@ const HeroSection = () => {
       >
         <div className="absolute inset-0 bg-black/30 z-10"></div>
         <img
-          src={property.images?.[imageIndex] || "https://via.placeholder.com/1200x600"}
+          src={property.images?.[imageIndex] || 'https://via.placeholder.com/1200x600'}
           alt={property.title}
           className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
         />
         <div className="absolute bottom-0 left-0 right-0 p-8 z-20 bg-gradient-to-t from-black/70">
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-playfair mb-4">{property.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white font-playfair mb-4">
+            {property.title}
+          </h1>
           <p className="text-xl text-white font-lato">
             {property.city}, {property.address}
           </p>
@@ -90,9 +92,9 @@ const HeroSection = () => {
 
         {/* Left Arrow for Previous Image - Enhanced with better styling */}
         <button
-          onClick={(e) => {
-            e.stopPropagation()
-            prevImage(e)
+          onClick={e => {
+            e.stopPropagation();
+            prevImage(e);
           }}
           className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-30 
                   bg-black/40 hover:bg-black/60 p-2 rounded-full transition-all duration-300
@@ -104,9 +106,9 @@ const HeroSection = () => {
 
         {/* Right Arrow for Next Image - Enhanced with better styling */}
         <button
-          onClick={(e) => {
-            e.stopPropagation()
-            nextImage(e)
+          onClick={e => {
+            e.stopPropagation();
+            nextImage(e);
           }}
           className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white z-30 
                   bg-black/40 hover:bg-black/60 p-2 rounded-full transition-all duration-300
@@ -141,7 +143,7 @@ const HeroSection = () => {
             {/* Image container - IMPROVED to fit full image */}
             <div className="w-full h-full flex items-center justify-center">
               <img
-                src={property.images?.[imageIndex] || "https://via.placeholder.com/1200x600"}
+                src={property.images?.[imageIndex] || 'https://via.placeholder.com/1200x600'}
                 alt={property.title}
                 className="max-h-[85vh] max-w-[85vw] object-contain"
               />
@@ -149,9 +151,9 @@ const HeroSection = () => {
 
             {/* Navigation buttons */}
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                prevImage(e)
+              onClick={e => {
+                e.stopPropagation();
+                prevImage(e);
               }}
               className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-[#D4AF37] bg-black bg-opacity-50 rounded-full p-2"
               aria-label="Previous image"
@@ -160,9 +162,9 @@ const HeroSection = () => {
             </button>
 
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                nextImage(e)
+              onClick={e => {
+                e.stopPropagation();
+                nextImage(e);
               }}
               className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-[#D4AF37] bg-black bg-opacity-50 rounded-full p-2"
               aria-label="Next image"
@@ -173,7 +175,7 @@ const HeroSection = () => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
 export default HeroSection;

@@ -1,8 +1,8 @@
-import api from "../../utlis/axios";
-import DashboardLayout from "../../component/layout/dashboardLayout";
-import { Calendar, MapPin, User } from "lucide-react";
-import useUserStore from "../../zustand/store";
-import { useEffect, useState } from "react";
+import api from '../../utlis/axios';
+import DashboardLayout from '../../component/layout/dashboardLayout';
+import { Calendar, MapPin, User } from 'lucide-react';
+import useUserStore from '../../zustand/store';
+import { useEffect, useState } from 'react';
 
 const BookingRequest = () => {
   const { user, isAuthenticated } = useUserStore();
@@ -13,13 +13,13 @@ const BookingRequest = () => {
     if (!isAuthenticated) return;
     const fetchBooking = async () => {
       try {
-        const endpoint = user.role === "AGENT" ? "/bookings/agent" : "/bookings/user";
+        const endpoint = user.role === 'AGENT' ? '/bookings/agent' : '/bookings/user';
         const res = await api.get(endpoint, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setBookings(res.data);
       } catch (err) {
-        setError(err.message || "Failed to load bookings");
+        setError(err.message || 'Failed to load bookings');
       }
     };
     fetchBooking();
@@ -32,20 +32,20 @@ const BookingRequest = () => {
         { status },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
-      setBookings(bookings.map((b) => (b.id === id ? { ...b, status } : b)));
+      setBookings(bookings.map(b => (b.id === id ? { ...b, status } : b)));
     } catch (err) {
-      alert(err.message || "Failed to update booking");
+      alert(err.message || 'Failed to update booking');
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async id => {
     try {
       await api.delete(`/bookings/${id}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
-      setBookings(bookings.filter((b) => b.id !== id));
+      setBookings(bookings.filter(b => b.id !== id));
     } catch (err) {
-      alert(err.message || "Failed to delete booking");
+      alert(err.message || 'Failed to delete booking');
     }
   };
 
@@ -73,7 +73,7 @@ const BookingRequest = () => {
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking) => (
+              {bookings.map(booking => (
                 <tr key={booking.id} className="border-t">
                   <td className="p-3 flex items-center">
                     <MapPin className="text-[#D4AF37] w-5 h-5 mr-2" />

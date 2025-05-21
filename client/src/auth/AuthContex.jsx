@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
-import axios from "axios";
+import React, { createContext, useContext, useState } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -8,17 +8,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const API_URL = "http://localhost:3000";
+  const API_URL = 'http://localhost:3000';
   axios.defaults.withCredentials = true;
 
-  const login = async (credentials) => {
+  const login = async credentials => {
     setLoading(true);
     try {
       const response = await axios.post(`${API_URL}/api/auth/login`, credentials);
       setUser(response.data);
       setError(null);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
       await axios.get(`${API_URL}/api/auth/logout`);
       setUser(null);
     } catch (err) {
-      setError(err.response?.data?.message || "Logout failed");
+      setError(err.response?.data?.message || 'Logout failed');
     }
   };
 
@@ -39,8 +39,8 @@ export const AuthProvider = ({ children }) => {
     error,
     login,
     logout,
-    isAgent: user?.userType === "agent",
-    isClient: user?.userType === "client",
+    isAgent: user?.userType === 'agent',
+    isClient: user?.userType === 'client',
   };
 
   return <AuthContext.Provider value={authValues}>{children}</AuthContext.Provider>;

@@ -1,6 +1,6 @@
 import React from 'react';
 import MainLayout from '../component/layout/mainLayout.jsx';
-import Hero from '../component/home/Hero.jsx'; 
+import Hero from '../component/home/Hero.jsx';
 import ExclusiveProperties from '../component/home/exclusiveProperties.jsx';
 import PremiumProperties from '../component/home/premiumProperties.jsx';
 import RecentProperties from '../component/home/recentproperties.jsx';

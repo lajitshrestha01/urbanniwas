@@ -9,8 +9,8 @@ const PropertyCardForDashboard = ({ property, onClick }) => {
     const loggedInUser = JSON.parse(localStorage.getItem('user'));
     const userRole = loggedInUser.role;
     setUserRole(userRole);
-    console.log("User role is ", userRole);
-  })
+    console.log('User role is ', userRole);
+  });
 
   return (
     <div
@@ -26,7 +26,7 @@ const PropertyCardForDashboard = ({ property, onClick }) => {
         <div className="absolute top-2 right-2">
           <button
             className="p-2 bg-white rounded-full hover:bg-gray-100"
-            onClick={(e) => e.stopPropagation()} // Prevent button click from triggering card navigation
+            onClick={e => e.stopPropagation()} // Prevent button click from triggering card navigation
           >
             <Heart className="w-5 h-5 text-gray-600" />
           </button>
@@ -56,14 +56,14 @@ const PropertyCardForDashboard = ({ property, onClick }) => {
             <span>{area} sqft</span>
           </div>
         </div>
-        {
-          userRole === "AGENT" ? (
-            <div className='flex justify-between'>
-              <button>Edit</button>
-              <button>Delete</button>
-            </div>
-          ) : <></>
-        }
+        {userRole === 'AGENT' ? (
+          <div className="flex justify-between">
+            <button>Edit</button>
+            <button>Delete</button>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

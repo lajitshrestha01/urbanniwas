@@ -10,20 +10,20 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    role: 'CLIENT' // Default role
+    role: 'CLIENT', // Default role
   });
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
       const response = await api.post('/auth/register', formData);
-      if (response.data.message === "User created successfully") {
+      if (response.data.message === 'User created successfully') {
         navigate('/login');
       }
     } catch (error) {
@@ -33,10 +33,10 @@ const Register = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -102,10 +102,11 @@ const Register = () => {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center"
             >
-              {showPassword ?
-                <EyeOff className="h-5 w-5 text-gray-400" /> :
+              {showPassword ? (
+                <EyeOff className="h-5 w-5 text-gray-400" />
+              ) : (
                 <Eye className="h-5 w-5 text-gray-400" />
-              }
+              )}
             </button>
           </div>
 

@@ -19,7 +19,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-3">Cities</h3>
             <ul className="space-y-1">
-              {cities.map((city) => (
+              {cities.map(city => (
                 <li key={city}>
                   <a
                     href={`/properties/city/${city.toLowerCase()}`}
@@ -36,8 +36,18 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-3">Contact</h3>
             <ul className="space-y-1 text-sm text-gray-400">
-              <li>Email: <a href="mailto:urbanniwas@gmail.com" className="hover:text-white">urbanniwas@gmail.com</a></li>
-              <li>Phone: <a href="tel:+9771234567890" className="hover:text-white">+977 1234567890</a></li>
+              <li>
+                Email:{' '}
+                <a href="mailto:urbanniwas@gmail.com" className="hover:text-white">
+                  urbanniwas@gmail.com
+                </a>
+              </li>
+              <li>
+                Phone:{' '}
+                <a href="tel:+9771234567890" className="hover:text-white">
+                  +977 1234567890
+                </a>
+              </li>
               <li>Address: Kathmandu, Nepal</li>
             </ul>
           </div>

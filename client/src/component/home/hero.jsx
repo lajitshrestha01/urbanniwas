@@ -4,7 +4,12 @@ import { Search } from 'lucide-react'; // Import the Search icon
 const Hero = () => {
   return (
     <div className="relative w-full h-[60vh] overflow-hidden">
-      <video autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover z-[-1]">
+      <video
+        autoPlay
+        loop
+        muted
+        className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
+      >
         <source src="./vid/0108.mp4" type="video/mp4" /> {/* Ensure the video path is correct */}
         Your browser does not support the video tag.
       </video>

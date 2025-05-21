@@ -1,13 +1,13 @@
 // components/SearchBar.jsx
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const SearchBar = ({
   onSearch,
-  location: initialLocation = "",
-  minPrice: initialMinPrice = "",
-  maxPrice: initialMaxPrice = "",
-  propertyType: initialPropertyType = "",
+  location: initialLocation = '',
+  minPrice: initialMinPrice = '',
+  maxPrice: initialMaxPrice = '',
+  propertyType: initialPropertyType = '',
 }) => {
   // States for the search inputs
   const [location, setLocation] = useState(initialLocation);
@@ -24,15 +24,15 @@ const SearchBar = ({
     }
   }, [location]);
 
-  const fetchLocationSuggestions = async (input) => {
+  const fetchLocationSuggestions = async input => {
     try {
-      const res = await axios.get("/api/properties/suggestions", {
+      const res = await axios.get('/api/properties/suggestions', {
         params: { location: input },
       });
 
       setLocationSuggestions(res.data.suggestions);
     } catch (error) {
-      console.error("Error fetching location suggestions:", error);
+      console.error('Error fetching location suggestions:', error);
     }
   };
 
@@ -53,7 +53,7 @@ const SearchBar = ({
           placeholder="Location"
           className="p-2 border rounded-md w-full"
           value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          onChange={e => setLocation(e.target.value)}
         />
         {locationSuggestions.length > 0 && (
           <ul className="absolute w-full bg-white shadow-lg z-10">
@@ -78,19 +78,19 @@ const SearchBar = ({
         placeholder="Min Price"
         className="p-2 border rounded-md"
         value={minPrice}
-        onChange={(e) => setMinPrice(e.target.value)}
+        onChange={e => setMinPrice(e.target.value)}
       />
       <input
         type="number"
         placeholder="Max Price"
         className="p-2 border rounded-md"
         value={maxPrice}
-        onChange={(e) => setMaxPrice(e.target.value)}
+        onChange={e => setMaxPrice(e.target.value)}
       />
       <select
         className="p-2 border rounded-md"
         value={propertyType}
-        onChange={(e) => setPropertyType(e.target.value)}
+        onChange={e => setPropertyType(e.target.value)}
       >
         <option value="">Select Property Type</option>
         <option value="HOUSE">House</option>
