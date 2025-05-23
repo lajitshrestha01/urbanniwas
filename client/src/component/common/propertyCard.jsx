@@ -22,7 +22,7 @@ const PropertyCard = ({ property, onClick }) => {
       }
     };
     checkFavorite();
-  }, [user, isAuthenticated, id]);
+  }, [id]);
 
   const toggleFavorite = async e => {
     e.stopPropagation(); // Prevent card click

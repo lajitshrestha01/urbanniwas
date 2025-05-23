@@ -25,6 +25,7 @@ const Buy = () => {
         params: {
           page: newPage,
           ...newFilters,
+
         },
       });
 

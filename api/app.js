@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
@@ -12,6 +12,7 @@ import favoriteRoutes from './routes/favorites.routes.js';
 import filterRoutes from './routes/filterPropery.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
 import messageRoutes from './routes/message.routes.js';
+import adminRoutes from './routes/admin.routes.js'
 
 const app = express();
 const httpServer = createServer(app);
@@ -21,8 +22,8 @@ const io = new Server(httpServer, {
     methods: ['GET', 'POST'],
     credentials: true,
   },
-  pingTimeout:20000,
-  pingInterval:25000,
+  pingTimeout: 20000,
+  pingInterval: 25000,
 });
 
 app.use(cors({
@@ -33,9 +34,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+
 // Routes
 app.use('/api/auth', authRoute);
 app.use('/api/properties', propertyRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/filter', filterRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/agent', agentRoutes);

@@ -15,7 +15,7 @@ const PremiumProperties = () => {
       }
     };
     fetchPremium();
-  });
+  }, []);
   return (
     <PropertySection
       title="Premium Properties"

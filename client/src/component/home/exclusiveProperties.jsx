@@ -15,7 +15,7 @@ const ExclusiveProperties = () => {
       }
     };
     fetchExclusive();
-  });
+  }, []);
   return (
     <PropertySection
       title="Exclusive Properties"

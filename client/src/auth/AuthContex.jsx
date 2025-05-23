@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
+import isAdmin from '../../../api/middleware/admin.middleware';
 
 const AuthContext = createContext();
 
@@ -41,6 +42,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     isAgent: user?.userType === 'agent',
     isClient: user?.userType === 'client',
+    isAdmin: user?.userType === 'admin'
   };
 
   return <AuthContext.Provider value={authValues}>{children}</AuthContext.Provider>;

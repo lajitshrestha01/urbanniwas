@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export const register = async (req, res) => {
     try {
-        const { name,email, password, role } = req.body;
+        const { name, email, password, role } = req.body;
         const hashedPassword = await bcryptjs.hash(password, 10);
 
         const newUser = await prisma.user.create({
@@ -45,17 +45,19 @@ export const login = async (req, res) => {
         const age = 1000 * 60 * 60 * 24;
 
         const token = jwt.sign({
-            id: user.id
+            id: user.id,
+            role: user.role,
         }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
 
         // Set token in cookie
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: age,
-        }).status(200).json({ 
-            user : user,
-            message: "Login Successful" 
+        }).status(200).json({
+            user: user,
+            message: "Login Successful"
         });
+        console.log(user)
 
     } catch (error) {
         console.log(error);

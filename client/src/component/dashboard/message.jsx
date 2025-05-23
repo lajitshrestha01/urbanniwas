@@ -3,7 +3,7 @@ import api from '../../utlis/axios';
 import useUserStore from '../../zustand/store';
 import { Send } from 'lucide-react';
 import io from 'socket.io-client';
-import DashboardLayout from '../layout/DashboardLayout';
+import DashboardLayout from '../layout/dashboardLayout';
 
 const socket = io('http://localhost:3000', { withCredentials: true, transports: ['websocket'] });
 
@@ -259,8 +259,8 @@ export default function Messages() {
                                     >
                                         <div
                                             className={`max-w-xs p-3 rounded-lg ${msg.senderId === user.id
-                                                    ? 'bg-blue-100 text-[#1A2B3C]'
-                                                    : 'bg-gray-100 text-gray-800'
+                                                ? 'bg-blue-100 text-[#1A2B3C]'
+                                                : 'bg-gray-100 text-gray-800'
                                                 }`}
                                         >
                                             <p className="text-xs text-gray-500">Regarding: {msg.property.title}</p>

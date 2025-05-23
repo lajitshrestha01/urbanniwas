@@ -29,7 +29,7 @@ const Sidebar = ({ role }) => {
   ];
 
   const clientMenu = [
-    { name: 'Dashboard', icon: <Home size={20} />, path: '/client/dashboard' },
+    // { name: 'Dashboard', icon: <Home size={20} />, path: '/client/dashboard' },
     { name: 'Favorite Properties', icon: <Building2 size={20} />, path: '/client/favorites' },
     { name: 'Book Visits', icon: <CalendarPlus size={20} />, path: '/client/visits' },
     { name: 'Messages', icon: <Mail size={20} />, path: '/client/message' },
@@ -90,10 +90,9 @@ const Sidebar = ({ role }) => {
                   <Link
                     to={item.path}
                     className={`flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150 group
-                      ${
-                        isActive
-                          ? 'bg-blue-500/10 text-blue-600'
-                          : 'text-slate-600 hover:bg-slate-200/70'
+                      ${isActive
+                        ? 'bg-blue-500/10 text-blue-600'
+                        : 'text-slate-600 hover:bg-slate-200/70'
                       }`}
                   >
                     <span

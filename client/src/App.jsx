@@ -20,6 +20,10 @@ import BookingRequest from './component/dashboard/booking';
 import BookVisit from './component/dashboard/bookingVisitClient';
 import Messages from './component/dashboard/message';
 import ProtectedRoute from './utlis/protectedRoute';
+import AdminLayout from './component/layout/AdminLayout';
+import AgentPage from './page/AgentPage'
+import PropertyPage from './page/PropertyPage'
+import AdminDashboard from './component/dashboard/AdminDashboard';
 
 export default function App() {
   return (
@@ -37,6 +41,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+
           <Route
             path="/agent/profile"
             element={
